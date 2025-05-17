@@ -17,6 +17,7 @@ import {
 } from "@tabler/icons-react";
 import EmployeeAssessment from "./training/_components/EmployeeAssessment";
 import { useDisclosure } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
   const CardsData: {
@@ -70,6 +71,19 @@ export default function DashboardPage() {
   ];
 
   const [opened, { open, close }] = useDisclosure(false);
+
+  const router = useRouter();
+  const handleprogress = (selected: string) => {
+    if (selected === "Complete Profile") {
+      router.push("/dashboard/settings/profile");
+      return;
+    }
+    if (selected === "Document Score") {
+      router.push("/dashboard/document-management");
+      return;
+    }
+    open();
+  };
 
   return (
     <div className="min-h-screen">
@@ -134,7 +148,7 @@ export default function DashboardPage() {
                 {item.title}
               </Text>
               <Button
-                onClick={open}
+                onClick={() => handleprogress(item.buttonText)}
                 miw={"50%"}
                 color="#054EFA"
                 mt="md"
