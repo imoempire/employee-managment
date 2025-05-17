@@ -47,11 +47,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Desktop Icons */}
           <Group gap="lg" visibleFrom="sm">
             <IconBell color="#ffffff" size={25} style={{ cursor: "pointer" }} />
-            <IconSettings
-              color="#ffffff"
-              size={25}
-              style={{ cursor: "pointer" }}
-            />
+            <Link href={"/dashboard/settings"}>
+              <IconSettings
+                color="#ffffff"
+                size={25}
+                style={{ cursor: "pointer" }}
+              />
+            </Link>
             <Link href="/logout">
               <IconLogout color="#ffffff" size={25} />
             </Link>
