@@ -1,22 +1,24 @@
 "use client";
+import React from "react";
+import { useForm } from "@mantine/form";
+import { InputField } from "@/Components/Inputs";
 import { Button, Group, Text, Title } from "@mantine/core";
 import { IconMail } from "@tabler/icons-react";
-import { useForm } from "@mantine/form";
-import { InputField, PasswordField } from "@/Components/Inputs";
-import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const router = useRouter();
+export default function Page() {
   const form = useForm({
     initialValues: {
+      Username: "",
       email: "",
       password: "",
+      confirm_password: "",
     },
     validate: {
+      Username: (value) => (value.length > 0 ? null : "Username is required"),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       password: (value) => {
         if (value.length < 8) {
-          return `Password should be more than 8 characters ${value.length}`;
+          return "Password should be more than 8 characters";
         }
         if (!/[a-z]/.test(value)) {
           return "Password should contain at least one lowercase letter";
@@ -29,12 +31,17 @@ export default function Home() {
         }
         return null;
       },
+      confirm_password: (value, { password }) => {
+        if (value !== password) {
+          return "Passwords do not match";
+        }
+        return null;
+      },
     },
   });
 
-  const handleSignIn = (values: typeof form.values) => {
+  const handleSignUp = (values: typeof form.values) => {
     console.log(values);
-    router.replace("/dashboard");
   };
 
   return (
@@ -43,12 +50,10 @@ export default function Home() {
       <div
         className="hidden lg:block lg:w-1/2 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/signin.jpg')",
+          backgroundImage: "url('/signup.jpg')",
           backgroundColor: "#f0f0f0",
         }}
-      >
-        {/* Using a local image in the public folder */}
-      </div>
+      />
 
       {/* Right Section: Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 bg-white">
@@ -57,35 +62,33 @@ export default function Home() {
           <Title
             order={2}
             mb={"xl"}
-            className="text-center text-2xl sm:text-3xl font-bold text-gray-800 "
+            className="text-center text-2xl sm:text-3xl font-bold text-gray-800"
           >
-            Login to your account
+            Create A Free Account
           </Title>
 
           {/* Form */}
-          <form onSubmit={form.onSubmit(handleSignIn)} className="space-y-6">
+          <form onSubmit={form.onSubmit(handleSignUp)} className="space-y-6">
+            {/* Username */}
+            <InputField form={form} name="Username" placeholder="username" />
+
             {/* Email Input */}
-            <InputField
-              placeholder="Email"
-              size="md"
-              name="email"
-              value={form.values.email}
-              onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
-              }
-              error={form.errors.email && "Invalid email"}
-            />
+            <InputField form={form} name="email" placeholder="Email" />
 
             {/* Password Input */}
-            <PasswordField
+            <InputField
+              form={form}
+              name="password"
               placeholder="Password"
               type="password"
-              name="password"
-              value={form.values.password}
-              onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
-              }
-              error={form.errors.password}
+            />
+
+            {/* Confirm Password Input */}
+            <InputField
+              form={form}
+              name="confirm_password"
+              placeholder="Confirm Password"
+              type="password"
             />
 
             {/* Sign In Button */}
@@ -96,7 +99,7 @@ export default function Home() {
               color="blue"
               className="mt-8"
             >
-              Sign in
+              Signup
             </Button>
           </form>
 
@@ -104,12 +107,12 @@ export default function Home() {
           <Group
             align="center"
             justify="center"
-            className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 "
+            className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
           >
             <Text size="sm" className="text-gray-600">
-              Don’t have an account yet?{" "}
-              <a href="/signup" className="text-blue-600 hover:underline">
-                Signup
+              You already have an account?{" "}
+              <a href={"/"} className="text-blue-600 hover:underline">
+                Login
               </a>
             </Text>
             <Text size="sm" className="text-gray-600">
