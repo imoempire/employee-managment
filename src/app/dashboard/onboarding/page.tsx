@@ -3,6 +3,7 @@ import { Button, Modal, RingProgress, Text } from "@mantine/core";
 import React from "react";
 import EmployeeAssessment from "../training/_components/EmployeeAssessment";
 import { useDisclosure } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   // Data for Progress Circles
@@ -28,6 +29,19 @@ export default function Page() {
   ];
 
   const [opened, { open, close }] = useDisclosure(false);
+
+  const router = useRouter();
+  const handleprogress = (selected: string) => {
+    if (selected === "Complete Profile") {
+      router.push("/dashboard/settings/profile");
+      return;
+    }
+    if (selected === "Document Score") {
+      router.push("/dashboard/document-management");
+      return;
+    }
+    open();
+  };
 
   return (
     <div className="min-h-screen">
@@ -60,7 +74,7 @@ export default function Page() {
                 {item.title}
               </Text>
               <Button
-                onClick={open}
+                onClick={() => handleprogress(item.buttonText)}
                 miw={"50%"}
                 color="#054EFA"
                 mt="md"
@@ -73,7 +87,7 @@ export default function Page() {
         </div>
       </div>
 
-      <Modal size={'80%'} opened={opened} onClose={close}>
+      <Modal size={"80%"} opened={opened} onClose={close}>
         <EmployeeAssessment />
       </Modal>
     </div>
