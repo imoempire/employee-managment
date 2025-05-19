@@ -78,8 +78,8 @@ export default function DashboardPage() {
       router.push("/dashboard/settings/profile");
       return;
     }
-    if (selected === "Document Score") {
-      router.push("/dashboard/document-management");
+    if (selected === "Upload Docs") {
+      router.push("/dashboard/document-management/my_docs?openModal=true");
       return;
     }
     open();

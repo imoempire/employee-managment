@@ -36,13 +36,14 @@ export default function Page() {
       router.push("/dashboard/settings/profile");
       return;
     }
-    if (selected === "Document Score") {
-      router.push("/dashboard/document-management");
+    if (selected === "Upload Docs") {
+      router.push("/dashboard/document-management/my_docs?openModal=true");
       return;
     }
     open();
   };
 
+  
   return (
     <div className="min-h-screen">
       {/* Main Content */}
