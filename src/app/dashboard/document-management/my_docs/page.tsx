@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import DocsTable from "../_components/DocsTable";
 import {
   IconArrowNarrowLeft,
@@ -20,10 +20,11 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
@@ -37,6 +38,17 @@ export default function Page() {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
   });
+
+  console.log(searchParams, 'searchParams');
+  
+  // Check for openModal query param on mount
+  useEffect(() => {
+    if (searchParams.get("openModal") === "true") {
+      open();
+      // Optionally clear the query param from the URL
+      // router.replace("/target", undefined, { shallow: true });
+    }
+  }, [searchParams, router]);
 
   return (
     <div className="min-h-screen">
