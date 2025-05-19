@@ -39,8 +39,6 @@ export default function Page() {
     },
   });
 
-  console.log(searchParams, 'searchParams');
-  
   // Check for openModal query param on mount
   useEffect(() => {
     if (searchParams.get("openModal") === "true") {
@@ -91,7 +89,7 @@ export default function Page() {
           <Flex mb={"lg"}>
             <Select
               w={"100%"}
-              data={["Passport", "Driver's License", "ID Card", "Utility Bill"]}
+              data={["ID", "Proof of Address", "Contract", "Certificate"]}
               withAsterisk
               label={"Select Document Type"}
               placeholder="Select Document Type"
