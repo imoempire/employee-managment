@@ -46,6 +46,7 @@ export default function Page() {
       // Optionally clear the query param from the URL
       // router.replace("/target", undefined, { shallow: true });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, router]);
 
   return (
