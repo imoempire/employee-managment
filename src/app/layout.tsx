@@ -7,7 +7,10 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import '@mantine/dropzone/styles.css';
+import "@mantine/dropzone/styles.css";
+import ReactQueryProvider from "./context/ReactQueryProvider";
+import { Notifications } from "@mantine/notifications";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,15 +33,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <MantineProvider>{children}</MantineProvider>
-      </body>
-    </html>
+    <SessionProvider>
+      <ReactQueryProvider>
+        <html lang="en" {...mantineHtmlProps}>
+          <head>
+            <ColorSchemeScript />
+          </head>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <MantineProvider>
+              <Notifications />
+              <ReactQueryProvider>{children}</ReactQueryProvider>
+            </MantineProvider>
+          </body>
+        </html>
+      </ReactQueryProvider>
+    </SessionProvider>
   );
 }

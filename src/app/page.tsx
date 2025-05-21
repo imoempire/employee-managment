@@ -1,12 +1,17 @@
 "use client";
-import { Button, Group, Text, Title } from "@mantine/core";
-import { IconMail } from "@tabler/icons-react";
+import { Box, Button, Group, Loader, Text, Title } from "@mantine/core";
+import { IconCheck, IconMail } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { InputField, PasswordField } from "@/Components/Inputs";
 import { useRouter } from "next/navigation";
+import { showNotification } from "@mantine/notifications";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -15,27 +20,98 @@ export default function Home() {
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       password: (value) => {
-        if (value.length < 8) {
-          return `Password should be more than 8 characters ${value.length}`;
+        if (value.length === 0) {
+          return "Password is required";
         }
-        if (!/[a-z]/.test(value)) {
-          return "Password should contain at least one lowercase letter";
-        }
-        if (!/[A-Z]/.test(value)) {
-          return "Password should contain at least one uppercase letter";
-        }
-        if (!/\d/.test(value)) {
-          return "Password should contain at least one number";
-        }
+        // if (value.length < 8) {
+        //   return `Password should be more than 8 characters ${value.length}`;
+        // }
+        // if (!/[a-z]/.test(value)) {
+        //   return "Password should contain at least one lowercase letter";
+        // }
+        // if (!/[A-Z]/.test(value)) {
+        //   return "Password should contain at least one uppercase letter";
+        // }
+        // if (!/\d/.test(value)) {
+        //   return "Password should contain at least one number";
+        // }
         return null;
       },
     },
   });
 
-  const handleSignIn = (values: typeof form.values) => {
-    console.log(values);
-    router.replace("/dashboard");
+  // STATE
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSignIn = async (values: typeof form.values) => {
+    setIsLoading(true);
+    try {
+      const response = await signIn("credentials", {
+        email: values.email.trim(),
+        password: values.password.trim(),
+        redirect: false,
+      });
+
+      if (response?.error) {
+        setError("Invalid email or password");
+        return;
+      }
+      console.log(response);
+
+      if (response?.ok) {
+        showNotification({
+          title: "Success",
+          message: "Login successfully!",
+          color: "green",
+          icon: <IconCheck />,
+          position: "bottom-center",
+        });
+        router.replace("/dashboard");
+        router.refresh();
+      }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setError("An unexpected error occurred");
+      // console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  useEffect(() => {
+    let isCurrent = true;
+    if (isCurrent && !session) {
+      router.replace("/");
+    } else {
+      setTimeout(() => {
+        router.replace("/dashboard");
+      }, 2000);
+    }
+    return () => {
+      isCurrent = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
+
+  if (status === "loading") {
+    return (
+      <Box
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundImage: "url(/assets/bg.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundColor: "white",
+        }}
+      >
+        <Loader size="lg" />
+      </Box>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -61,6 +137,12 @@ export default function Home() {
           >
             Login to your account
           </Title>
+
+          {!!error && (
+            <Text c="red" ta="center">
+              {error}
+            </Text>
+          )}
 
           {/* Form */}
           <form onSubmit={form.onSubmit(handleSignIn)} className="space-y-6">
@@ -95,6 +177,7 @@ export default function Home() {
               size="lg"
               color="blue"
               className="mt-8"
+              loading={isLoading}
             >
               Sign in
             </Button>

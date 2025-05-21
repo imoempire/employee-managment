@@ -18,6 +18,7 @@ import {
 import EmployeeAssessment from "./training/_components/EmployeeAssessment";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
   const CardsData: {
@@ -70,6 +71,8 @@ export default function DashboardPage() {
     },
   ];
 
+  const { data } = useSession();
+
   const [opened, { open, close }] = useDisclosure(false);
 
   const router = useRouter();
@@ -89,9 +92,11 @@ export default function DashboardPage() {
     <div className="min-h-screen">
       {/* Main Content */}
       <div className="container mx-auto p-6">
-        <Title mb={"xl"} order={2} className="text-center text-gray-800">
-          Hey Mawuena!
-        </Title>
+        {data?.user?.username && (
+          <Title mb={"xl"} order={2} className="text-center text-gray-800">
+            Hey {data?.user?.username}!
+          </Title>
+        )}
 
         {/* Cards Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">

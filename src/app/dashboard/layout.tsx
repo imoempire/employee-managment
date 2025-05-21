@@ -1,19 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell, Burger, Group, Text, Menu } from "@mantine/core";
 import Link from "next/link";
 import { IconBell, IconSettings, IconLogout } from "@tabler/icons-react";
+import {  getSession, signOut, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+// import { performSignOut } from "../_methods";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false);
+
+  useEffect(() => {
+    getSession();
+  }, []);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    redirect("/");
+  }
 
   const navLinks = [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Document Management", href: "/dashboard/document-management" },
     { label: "Onboarding", href: "/dashboard/onboarding" },
+    { label: "Document Management", href: "/dashboard/document-management" },
     { label: "Training", href: "/dashboard/training" },
     { label: "Support", href: "/dashboard/support" },
   ];
+
+  const SignOut = async () => {
+    await signOut();
+  };
 
   return (
     <AppShell header={{ height: 60 }} padding="xl">
@@ -54,9 +74,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 style={{ cursor: "pointer" }}
               />
             </Link>
-            <Link href="/logout">
+            <div onClick={SignOut}>
               <IconLogout color="#ffffff" size={25} />
-            </Link>
+            </div>
           </Group>
 
           {/* Mobile Burger with Menu */}
@@ -104,9 +124,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconLogout size={16} />}
-                component={Link}
-                href="/logout"
-                onClick={() => setMobileMenuOpened(false)} // Close menu on click
+                
+                onClick={() => {
+                  // setMobileMenuOpened(false);
+                  SignOut();
+                }}
               >
                 Logout
               </Menu.Item>
