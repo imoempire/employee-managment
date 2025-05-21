@@ -31,15 +31,15 @@ export default function Page() {
         if (value.length < 8) {
           return "Password should be more than 8 characters";
         }
-        if (!/[a-z]/.test(value)) {
-          return "Password should contain at least one lowercase letter";
-        }
-        if (!/[A-Z]/.test(value)) {
-          return "Password should contain at least one uppercase letter";
-        }
-        if (!/\d/.test(value)) {
-          return "Password should contain at least one number";
-        }
+        // if (!/[a-z]/.test(value)) {
+        //   return "Password should contain at least one lowercase letter";
+        // }
+        // if (!/[A-Z]/.test(value)) {
+        //   return "Password should contain at least one uppercase letter";
+        // }
+        // if (!/\d/.test(value)) {
+        //   return "Password should contain at least one number";
+        // }
         return null;
       },
       confirm_password: (value, { password }) => {
