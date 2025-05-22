@@ -30,6 +30,7 @@ import { API_ENDPOINT } from "@/service/api/endpoints";
 import { showNotification } from "@mantine/notifications";
 import { useCustomPost } from "@/Hooks/useCustomPost";
 import { useSession } from "next-auth/react";
+import { useCustomGet } from "@/Hooks/useCustomGet";
 
 interface FormValues {
   documentType: string;
@@ -43,6 +44,11 @@ export default function Page() {
   const [opened, { open, close }] = useDisclosure(false);
   const [isloading, setIsloading] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  //API DATA
+  const { data: DocumentType } = useCustomGet<{ available_types: string[] }>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/available-document-types`,
+  });
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -122,8 +128,6 @@ export default function Page() {
     const file = files[0];
 
     if (file) {
-      console.log(file, "file");
-
       form.setFieldValue("file", file);
 
       // Revoke previous preview to avoid memory leaks
@@ -140,8 +144,6 @@ export default function Page() {
       }
     }
   };
-
-  console.log(form.values, "previewUrl");
 
   useEffect(() => {
     return () => {
@@ -196,7 +198,14 @@ export default function Page() {
           <Flex mb={"lg"}>
             <Select
               w={"100%"}
-              data={["ID", "Proof of Address", "Contract", "Certificate"]}
+              data={
+                DocumentType?.available_types || [
+                  "ID",
+                  "Proof of Address",
+                  "Contract",
+                  "Certificate",
+                ]
+              }
               withAsterisk
               label={"Select Document Type"}
               placeholder="Select Document Type"
