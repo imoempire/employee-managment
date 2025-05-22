@@ -18,6 +18,8 @@ import { API_ENDPOINT } from "@/service/api/endpoints";
 import { useRouter } from "next/navigation";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import { useCustomGet } from "@/Hooks/useCustomGet";
+import { ProfileResponse } from "@/Hooks/ApiDataTypes";
 
 interface EmployeeFormData {
   full_name: string;
@@ -33,6 +35,13 @@ interface EmployeeFormData {
 export default function Page() {
   const { data } = useSession();
   const router = useRouter();
+
+  //API DATA
+  const { data: MyProfile } = useCustomGet<ProfileResponse>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/employee-profile`,
+  });
+
+  console.log(MyProfile?.profile, "MyProfile");
 
   // Add
   const form = useForm<EmployeeFormData>({
@@ -72,12 +81,20 @@ export default function Page() {
   });
 
   useEffect(() => {
-    if (data?.user?.email) {
-      form.setFieldValue("email", data?.user?.email);
+    if (MyProfile?.profile) {
+      const profile = MyProfile?.profile;
+      form.setFieldValue("email", profile.email);
+      form.setFieldValue("department", profile.department);
+      form.setFieldValue("full_name", profile.full_name);
+      form.setFieldValue("phone_number", profile.phone_number);
+      form.setFieldValue("start_date", profile.start_date ? new Date(profile.start_date) : null);
+      form.setFieldValue("position", profile.position);
+      form.setFieldValue("technical_skills", profile.technical_skills);
+      form.setFieldValue("professional_bio", profile.professional_bio);
     }
     return () => {};
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [MyProfile?.profile]);
 
   const POST_ACTION = useCustomPost<EmployeeFormData>({
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`,
