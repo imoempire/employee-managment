@@ -8,15 +8,12 @@ import {
   RingProgress,
   Stack,
   Divider,
-  Modal,
 } from "@mantine/core";
 import {
   IconDeviceDesktopAnalytics,
   IconFolder,
   IconUserStar,
 } from "@tabler/icons-react";
-import EmployeeAssessment from "./training/_components/EmployeeAssessment";
-import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -73,10 +70,12 @@ export default function DashboardPage() {
 
   const { data } = useSession();
 
-  const [opened, { open, close }] = useDisclosure(false);
-
   const router = useRouter();
   const handleprogress = (selected: string) => {
+    if (selected === "Start Onboarding") {
+      router.push("/dashboard/onboarding");
+      return;
+    }
     if (selected === "Complete Profile") {
       router.push("/dashboard/settings/profile");
       return;
@@ -85,7 +84,6 @@ export default function DashboardPage() {
       router.push("/dashboard/document-management/my_docs?openModal=true");
       return;
     }
-    open();
   };
 
   return (
@@ -165,10 +163,6 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
-
-      <Modal size={"80%"} opened={opened} onClose={close}>
-        <EmployeeAssessment />
-      </Modal>
     </div>
   );
 }
