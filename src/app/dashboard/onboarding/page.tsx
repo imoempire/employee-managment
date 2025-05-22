@@ -1,20 +1,19 @@
 "use client";
 import {
-  // Button,
   Center,
-  // Modal,
   Paper,
   Progress,
-  // RingProgress,
   SegmentedControl,
   Text,
   Title,
 } from "@mantine/core";
 import React, { JSX, useState } from "react";
-// import EmployeeAssessment from "../training/_components/EmployeeAssessment";
-// import { useDisclosure } from "@mantine/hooks";
-// import { useRouter } from "next/navigation";
-import { IconBook, IconShield, IconUsers } from "@tabler/icons-react";
+import {
+  IconBook,
+  IconShield,
+  IconUsers,
+  IconBuilding,
+} from "@tabler/icons-react";
 import CodeConduct from "./_components/CodeConduct";
 import VisionMission from "./_components/VisionMission";
 import CompanyProfile from "./_components/Profile";
@@ -27,43 +26,6 @@ type SegmentValues =
   | "Org Structure";
 
 export default function Page() {
-  // Data for Progress Circles
-  // const progressData = [
-  //   {
-  //     title: "Onboarding Score",
-  //     percentage: 65,
-  //     color: "#054EFA",
-  //     buttonText: "Start Onboarding",
-  //   },
-  //   {
-  //     title: "Profile Score",
-  //     percentage: 83,
-  //     color: "#000000",
-  //     buttonText: "Complete Profile",
-  //   },
-  //   {
-  //     title: "Document Score",
-  //     percentage: 91,
-  //     color: "#FA9005",
-  //     buttonText: "Upload Docs",
-  //   },
-  // ];
-
-  // const [opened, { open, close }] = useDisclosure(false);
-
-  // const router = useRouter();
-  // const handleprogress = (selected: string) => {
-  //   if (selected === "Complete Profile") {
-  //     router.push("/dashboard/settings/profile");
-  //     return;
-  //   }
-  //   if (selected === "Upload Docs") {
-  //     router.push("/dashboard/document-management/my_docs?openModal=true");
-  //     return;
-  //   }
-  //   open();
-  // };
-
   const [value, setValue] = useState<SegmentValues>("Code of Conduct");
 
   const Tabs: Record<SegmentValues, JSX.Element> = {
@@ -73,123 +35,111 @@ export default function Page() {
     "Org Structure": <OrgStructure />,
   };
 
+  const segmentData = [
+    {
+      label: (
+        <Center style={{ gap: 6 }}>
+          <IconShield size={16} />
+          <span className="hidden sm:inline">Code of Conduct</span>
+          <span className="sm:hidden text-xs">Code</span>
+        </Center>
+      ),
+      value: "Code of Conduct",
+    },
+    {
+      label: (
+        <Center style={{ gap: 6 }}>
+          <IconBook size={16} />
+          <span className="hidden sm:inline">Vision & Mission</span>
+          <span className="sm:hidden text-xs">Vision</span>
+        </Center>
+      ),
+      value: "Vision & Mission",
+    },
+    {
+      label: (
+        <Center style={{ gap: 6 }}>
+          <IconUsers size={16} />
+          <span className="hidden sm:inline">Company Profile</span>
+          <span className="sm:hidden text-xs">Profile</span>
+        </Center>
+      ),
+      value: "Company Profile",
+    },
+    {
+      label: (
+        <Center style={{ gap: 6 }}>
+          <IconBuilding size={16} />
+          <span className="hidden sm:inline">Org Structure</span>
+          <span className="sm:hidden text-xs">Structure</span>
+        </Center>
+      ),
+      value: "Org Structure",
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Main Content */}
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-4xl mx-auto">
         <div>
-          <Title order={1}>Employee Onboarding</Title>
-          <Text size="lg" c="#64748b" mb={"lg"}>
+          <Title order={1} className="text-2xl sm:text-3xl">
+            Employee Onboarding
+          </Title>
+          <Text
+            size="lg"
+            c="#64748b"
+            mb={"lg"}
+            className="text-base sm:text-lg"
+          >
             Learn about our company values, policies, and structure to help you
             get started.
           </Text>
         </div>
+
         <Paper withBorder p={"md"} mb={"xl"} shadow="xs">
           <div className="flex flex-col gap-y-1.5">
             <div className="flex justify-between items-center">
-              <Text size="xl" fw={"500"}>
+              <Text size="xl" fw={"500"} className="text-lg sm:text-xl">
                 Onboarding
               </Text>
-              <Text size="sm" fw={"500"} c={"#64748B"}>
+              <Text
+                size="sm"
+                fw={"500"}
+                c={"#64748B"}
+                className="text-xs sm:text-sm"
+              >
                 0/4 sections completed
               </Text>
             </div>
             <Progress value={0} />
           </div>
         </Paper>
-        <Paper my={"xl"}>
+
+        {/* Desktop: SegmentedControl */}
+        <Paper my={"xl"} className="hidden sm:block">
           <SegmentedControl
             value={value}
             onChange={(val) => setValue(val as SegmentValues)}
             size="md"
             radius={"sm"}
             withItemsBorders={false}
-            w={"100%"}
-            data={[
-              {
-                label: (
-                  <Center style={{ gap: 10 }}>
-                    <IconShield size={"17"} />
-                    <span>Code of Conduct</span>
-                  </Center>
-                ),
-                value: "Code of Conduct",
+            fullWidth
+            data={segmentData}
+            styles={{
+              root: {
+                overflow: "auto",
               },
-              {
-                label: (
-                  <Center style={{ gap: 10 }}>
-                    <IconBook size={"17"} />
-                    <span>Vision & Mission</span>
-                  </Center>
-                ),
-                value: "Vision & Mission",
-              },
-              {
-                label: (
-                  <Center style={{ gap: 10 }}>
-                    <IconUsers size={"17"} />
-                    <span>Company Profile</span>
-                  </Center>
-                ),
-                value: "Company Profile",
-              },
-              {
-                label: (
-                  <Center style={{ gap: 10 }}>
-                    <IconUsers size={"17"} />
-                    <span>Org Structure</span>
-                  </Center>
-                ),
-                value: "Org Structure",
-              },
-            ]}
+            }}
           />
         </Paper>
+
         <div>
           <Paper shadow="xs" p={"md"} withBorder>
             {value && Tabs[value]}
           </Paper>
         </div>
-        {/* Progress Circles Section */}
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {progressData.map((item) => (
-            <div
-              key={item.title}
-              className="flex flex-col items-center border-2 rounded-xl py-4"
-            >
-              <RingProgress
-                size={250}
-                thickness={24}
-                label={
-                  <Text size="xl" ta="center">
-                    {item.percentage}%
-                  </Text>
-                }
-                sections={[{ value: item.percentage, color: item.color }]}
-              />
-              <Text size="xl" fw={700} mt="md" className="text-gray-800">
-                {item.percentage}%
-              </Text>
-              <Text size="sm" className="text-gray-600">
-                {item.title}
-              </Text>
-              <Button
-                onClick={() => handleprogress(item.buttonText)}
-                miw={"50%"}
-                color="#054EFA"
-                mt="md"
-                radius="lg"
-              >
-                {item.buttonText}
-              </Button>
-            </div>
-          ))}
-        </div> */}
       </div>
-
-      {/* <Modal size={"80%"} opened={opened} onClose={close}>
-        <EmployeeAssessment />
-      </Modal> */}
     </div>
   );
 }

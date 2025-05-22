@@ -1,5 +1,9 @@
+"use client"
 import React from "react";
 import { CourseCard } from "./_components/Card";
+import { useDisclosure } from "@mantine/hooks";
+import EmployeeAssessment from "./_components/EmployeeAssessment";
+import { Modal } from "@mantine/core";
 
 export default function Page() {
   const courses = [
@@ -47,26 +51,34 @@ export default function Page() {
     },
   ];
 
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto p-6">
-        <div className="flex justify-between mb-8 items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Training Videos</h1>
-            <p className="text-xl">
-              Required training for all drone sales and repair technicians
-            </p>
+    <>
+      <div className="min-h-screen">
+        <div className="container mx-auto p-6">
+          <div className="flex justify-between mb-8 items-center">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Training Videos</h1>
+              <p className="text-xl">
+                Required training for all drone sales and repair technicians
+              </p>
+            </div>
+            <button onClick={open} className="bg-[#0039C8] text-white px-4 py-2 rounded-full">
+              Take Assessment
+            </button>
           </div>
-          <button className="bg-[#0039C8] text-white px-4 py-2 rounded-full">
-            Take Assessment
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
-          {courses.map((course, index) => (
-            <CourseCard key={index} {...course} />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
+            {courses.map((course, index) => (
+              <CourseCard key={index} {...course} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      <Modal size={"80%"} opened={opened} onClose={close}>
+        <EmployeeAssessment />
+      </Modal>
+    </>
   );
 }
