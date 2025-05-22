@@ -11,8 +11,10 @@ const VisionSession = ({
 }) => {
   return (
     <div>
-      <Title order={4} mb={'md'}>{title}</Title>
-      <Paper shadow="0" withBorder p={'sm'} radius={'sm'} bg={"#EFF6FF"}>
+      <Title order={4} mb={"md"}>
+        {title}
+      </Title>
+      <Paper shadow="0" withBorder p={"sm"} radius={"sm"} bg={"#EFF6FF"}>
         <Text mt={"sm"} size="md" c="#1E40AF">
           {`"${description}"`}
         </Text>
@@ -47,7 +49,9 @@ const DATA = [
 const CoreSession = ({ title }: { title: string }) => {
   return (
     <div>
-      <Title order={4} mb={'md'}>{title}</Title>
+      <Title order={4} mb={"md"}>
+        {title}
+      </Title>
       <div className="flex flex-col gap-y-2">
         {DATA?.map((item, index) => {
           return (
@@ -93,18 +97,16 @@ export default function VisionMission() {
       </div>
       <div className="flex flex-col gap-y-3.5">
         {VisionMissions?.map((item, index) => (
-          <>
-            {item.title !== "Core Values" && (
+          <div key={index}>
+            {item.title == "Core Values" ? (
+              <CoreSession title={item.title} />
+            ) : (
               <VisionSession
-                key={index}
                 description={item.description}
                 title={item.title}
               />
             )}
-            {item.title == "Core Values" && (
-              <CoreSession key={index} title={item.title} />
-            )}
-          </>
+          </div>
         ))}
       </div>
       <div className="mt-8">
