@@ -31,15 +31,18 @@ export default function Page() {
         if (value.length < 8) {
           return "Password should be more than 8 characters";
         }
-        // if (!/[a-z]/.test(value)) {
-        //   return "Password should contain at least one lowercase letter";
-        // }
-        // if (!/[A-Z]/.test(value)) {
-        //   return "Password should contain at least one uppercase letter";
-        // }
-        // if (!/\d/.test(value)) {
-        //   return "Password should contain at least one number";
-        // }
+        if (!/[a-z]/.test(value)) {
+          return "Password should contain at least one lowercase letter";
+        }
+        if (!/[A-Z]/.test(value)) {
+          return "Password should contain at least one uppercase letter";
+        }
+        if (!/\d/.test(value)) {
+          return "Password should contain at least one number";
+        }
+        if (!/[!@#$%^&*]/.test(value)) {
+          return "Password should contain at least one special character (!@#$%^&*)";
+        }
         return null;
       },
       confirm_password: (value, { password }) => {
@@ -159,6 +162,15 @@ export default function Page() {
     }
   };
 
+  const handleGmailSignup = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      console.error("Gmail signup error:", error);
+      setError("Failed to sign up with Gmail");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Section: Background Image */}
@@ -270,8 +282,9 @@ export default function Page() {
               className="mt-4"
               variant="outline"
               disabled={isLoading}
+              onClick={handleGmailSignup}
             >
-              Gmail
+              Sign up with Gmail
             </Button>
           </div>
         ) : (

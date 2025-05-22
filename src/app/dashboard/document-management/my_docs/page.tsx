@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DocsTable from "../_components/DocsTable";
 import {
   IconArrowNarrowLeft,
+  IconCheck,
+  IconFileTypeDoc,
   IconPhoto,
   IconUpload,
   IconX,
@@ -12,42 +15,141 @@ import {
   Button,
   Flex,
   Group,
+  Image,
   Modal,
+  Paper,
   Select,
   Stack,
   Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import { useRouter, useSearchParams } from "next/navigation";
+import { API_ENDPOINT } from "@/service/api/endpoints";
+import { showNotification } from "@mantine/notifications";
+import { useCustomPost } from "@/Hooks/useCustomPost";
+import { useSession } from "next-auth/react";
+
+interface FormValues {
+  documentType: string;
+  file: FileWithPath | null;
+}
 
 export default function Page() {
+  const { data } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [opened, { open, close }] = useDisclosure(false);
+  const [isloading, setIsloading] = useState<boolean>(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const form = useForm({
-    mode: "uncontrolled",
+  const form = useForm<FormValues>({
     initialValues: {
-      email: "",
-      termsOfService: false,
+      documentType: "",
+      file: null,
     },
-
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      documentType: (value) => (value ? null : "Please select a document type"),
+      file: (value) => (value ? null : "Please upload a file"),
     },
   });
 
-  // Check for openModal query param on mount
   useEffect(() => {
     if (searchParams.get("openModal") === "true") {
       open();
-      // Optionally clear the query param from the URL
-      // router.replace("/target", undefined, { shallow: true });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  const POST_ACTION = useCustomPost<FormData>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/upload-document`,
+    onSuccess: (data: any) => {
+      close();
+      form.reset();
+      showNotification({
+        title: "Success",
+        message: data?.message || "Document uploaded successfully!",
+        color: "green",
+        icon: <IconCheck />,
+        position: "bottom-center",
+      });
+    },
+    onError: (error: any) => {
+      showNotification({
+        title: "Error",
+        message: error?.message || "Something went wrong!",
+        color: "red",
+        icon: <IconX />,
+        position: "bottom-center",
+      });
+    },
+  });
+
+  const handleSubmit = async (values: FormValues) => {
+    if (!values.file) {
+      showNotification({
+        title: "Error",
+        message: "No file selected",
+        color: "red",
+        icon: <IconX />,
+        position: "bottom-center",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("document_type", values.documentType);
+    formData.append("document", values.file);
+
+    setIsloading(true);
+    try {
+      await POST_ACTION.mutateAsync(formData);
+    } catch (error: any) {
+      showNotification({
+        title: "Error",
+        message: error?.message || "Something went wrong!",
+        color: "red",
+        icon: <IconX />,
+        position: "bottom-center",
+      });
+    } finally {
+      setIsloading(false);
+    }
+  };
+
+  const handleDrop = (files: FileWithPath[]) => {
+    const file = files[0];
+
+    if (file) {
+      console.log(file, "file");
+
+      form.setFieldValue("file", file);
+
+      // Revoke previous preview to avoid memory leaks
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
+      // Only generate preview URL if file is an image
+      if (file.type.startsWith("image/")) {
+        const objectUrl = URL.createObjectURL(file);
+        setPreviewUrl(objectUrl);
+      } else {
+        setPreviewUrl(null);
+      }
+    }
+  };
+
+  console.log(form.values, "previewUrl");
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   return (
     <div className="min-h-screen">
@@ -56,7 +158,7 @@ export default function Page() {
           <ActionIcon
             color={"#054EFA"}
             variant="filled"
-            aria-label="Settings"
+            aria-label="Back"
             radius={"xl"}
             size={"xl"}
             mb={"xl"}
@@ -81,12 +183,16 @@ export default function Page() {
         centered
         size={"lg"}
         opened={opened}
-        onClose={close}
+        onClose={() => {
+          close();
+          form.reset();
+          setPreviewUrl(null); // Clear preview URL
+        }}
         title="Add Documents"
         closeOnClickOutside={false}
         p={"xl"}
       >
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <Flex mb={"lg"}>
             <Select
               w={"100%"}
@@ -94,25 +200,35 @@ export default function Page() {
               withAsterisk
               label={"Select Document Type"}
               placeholder="Select Document Type"
-              key={form.key("email")}
-              {...form.getInputProps("email")}
+              {...form.getInputProps("documentType")}
             />
           </Flex>
 
           <Stack gap={0}>
             <Text size="sm" fw={"500"} mb={"2"}>
-              Upload Document
+              Upload Document{" "}
+              {form.errors.file && <Text c={"red"}>form.errors.file</Text>}
             </Text>
+
             <Dropzone
-              onDrop={(files) => console.log("accepted files", files)}
-              onReject={(files) => console.log("rejected files", files)}
-              maxSize={5 * 1024 ** 2}
-              accept={IMAGE_MIME_TYPE}
+              onDrop={handleDrop}
+              onReject={(files) => {
+                form.setFieldError(
+                  "file",
+                  files[0]?.errors[0]?.message || "Invalid file"
+                );
+              }}
+              maxSize={512 * 1024 ** 2}
+              accept={{
+                "image/png": [".png"],
+                "image/jpeg": [".jpg", ".jpeg"],
+                "application/pdf": [".pdf"],
+              }}
             >
               <Group
                 justify="center"
                 gap="xl"
-                mih={220}
+                mih={20}
                 style={{ pointerEvents: "none" }}
               >
                 <Dropzone.Accept>
@@ -143,11 +259,44 @@ export default function Page() {
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7}>
                     Attach as many files as you like, each file should not
-                    exceed 5mb
+                    exceed 5MB
                   </Text>
                 </div>
               </Group>
             </Dropzone>
+            <Paper mt={"md"} p={"md"} withBorder>
+              {form.values?.file?.name && (
+                <div className="mt-2 z-10">
+                  {form.values.file.type.startsWith("image/") && previewUrl ? (
+                    <>
+                      <Image
+                        radius="md"
+                        src={previewUrl}
+                        alt={form.values.file.name}
+                        w={100}
+                        h={100}
+                        fit="contain"
+                        style={{ marginTop: "10px" }}
+                      />
+                    </>
+                  ) : (
+                    <Group mt="sm">
+                      <IconFileTypeDoc
+                        size={40}
+                        color="var(--mantine-color-dimmed)"
+                      />
+                      <Text size="sm">
+                        No preview available for this file type
+                      </Text>
+                    </Group>
+                  )}
+                  <Text mt={"xs"}>
+                    Selected file: {form.values.file.name} (
+                    {(form.values.file.size / 1024).toFixed(2)} KB)
+                  </Text>
+                </div>
+              )}
+            </Paper>
           </Stack>
 
           <div className="mt-6">
@@ -157,9 +306,10 @@ export default function Page() {
               color="#054EFA"
               className="mt-4"
               variant="filled"
-              onClick={close}
+              type="submit"
+              loading={isloading}
             >
-              I’m done
+              Upload
             </Button>
           </div>
         </form>

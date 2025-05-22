@@ -2,8 +2,13 @@
 import { useEffect, useState } from "react";
 import { AppShell, Burger, Group, Text, Menu } from "@mantine/core";
 import Link from "next/link";
-import { IconBell, IconSettings, IconLogout } from "@tabler/icons-react";
-import {  getSession, signOut, useSession } from "next-auth/react";
+import {
+  IconBell,
+  IconSettings,
+  IconLogout,
+  IconUserCircle,
+} from "@tabler/icons-react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 // import { performSignOut } from "../_methods";
 
@@ -67,13 +72,31 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Desktop Icons */}
           <Group gap="lg" visibleFrom="sm">
             <IconBell color="#ffffff" size={25} style={{ cursor: "pointer" }} />
-            <Link href={"/dashboard/settings"}>
-              <IconSettings
-                color="#ffffff"
-                size={25}
-                style={{ cursor: "pointer" }}
-              />
-            </Link>
+            <Menu>
+              <Menu.Target>
+                <IconSettings
+                  color="#ffffff"
+                  size={25}
+                  style={{ cursor: "pointer" }}
+                />
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  leftSection={<IconSettings size={25} />}
+                  component={Link}
+                  href="/dashboard/settings"
+                >
+                  Settings
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconUserCircle size={25} />}
+                  component={Link}
+                  href="/dashboard/settings/profile"
+                >
+                  Profile
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
             <div onClick={SignOut}>
               <IconLogout color="#ffffff" size={25} />
             </div>
@@ -102,7 +125,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   key={link.href}
                   component={Link}
                   href={link.href}
-                  onClick={() => setMobileMenuOpened(false)} // Close menu on click
+                  onClick={() => setMobileMenuOpened(false)}
                 >
                   {link.label}
                 </Menu.Item>
@@ -111,22 +134,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Menu.Item
                 leftSection={<IconBell size={16} />}
                 component="button"
-                onClick={() => setMobileMenuOpened(false)} // Close menu on click
+                onClick={() => setMobileMenuOpened(false)}
               >
                 Notifications
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconSettings size={16} />}
-                component="button"
-                onClick={() => setMobileMenuOpened(false)} // Close menu on click
+                component="link"
+                href="/dashboard/settings"
+                onClick={() => {
+                  setMobileMenuOpened(false);
+                }}
               >
                 Settings
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconLogout size={16} />}
-                
                 onClick={() => {
-                  // setMobileMenuOpened(false);
                   SignOut();
                 }}
               >

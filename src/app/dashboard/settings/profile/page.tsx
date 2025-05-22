@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Button,
@@ -7,10 +8,114 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { TextField } from "../_components/TextField";
+import { useForm } from "@mantine/form";
+import { DateInput } from "@mantine/dates";
+import { useSession } from "next-auth/react";
+import { useCustomPost } from "@/Hooks/useCustomPost";
+import { API_ENDPOINT } from "@/service/api/endpoints";
+import { useRouter } from "next/navigation";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
+
+interface EmployeeFormData {
+  full_name: string;
+  email: string;
+  phone_number: string;
+  start_date: Date | null;
+  department: string;
+  position: string;
+  technical_skills: string;
+  professional_bio: string;
+}
 
 export default function Page() {
+  const { data } = useSession();
+  const router = useRouter();
+
+  // Add
+  const form = useForm<EmployeeFormData>({
+    initialValues: {
+      full_name: "",
+      email: "",
+      phone_number: "",
+      start_date: null,
+      department: "",
+      position: "",
+      technical_skills: "",
+      professional_bio: "",
+    },
+    validate: {
+      full_name: (value) =>
+        value.trim().length < 2
+          ? "Full name must be at least 2 characters"
+          : null,
+      email: (value) =>
+        !/^\S+@\S+$/.test(value) ? "Invalid email format" : null,
+      phone_number: (value) =>
+        !/^\d{10,15}$/.test(value.replace(/\D/g, ""))
+          ? "Phone number must be 10-15 digits"
+          : null,
+      start_date: (value) => (!value ? "Start date is required" : null),
+      department: (value) => (!value ? "Department is required" : null),
+      position: (value) => (!value ? "Position is required" : null),
+      technical_skills: (value) =>
+        value.trim().length < 3
+          ? "Please provide at least 3 characters for technical skills"
+          : null,
+      professional_bio: (value) =>
+        value.trim().length < 10
+          ? "Professional bio should be at least 10 characters"
+          : null,
+    },
+  });
+
+  useEffect(() => {
+    if (data?.user?.email) {
+      form.setFieldValue("email", data?.user?.email);
+    }
+    return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  const POST_ACTION = useCustomPost<EmployeeFormData>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`,
+    onSuccess: (data: any) => {
+      router.back();
+      showNotification({
+        title: "Success",
+        message: data?.message || "Changes saved successfully!",
+        color: "green",
+        icon: <IconCheck />,
+        position: "bottom-center",
+      });
+    },
+    onError: (error: any) => {
+      showNotification({
+        title: "Error",
+        message: error?.message || "Something went wrong!",
+        color: "red",
+        icon: <IconX />,
+        position: "bottom-center",
+      });
+    },
+  });
+
+  const handleSubmit = async (values: typeof form.values) => {
+    try {
+      await POST_ACTION.mutateAsync(values);
+    } catch (error: any) {
+      showNotification({
+        title: "Error",
+        message: error?.response?.data?.message || "Something went wrong!",
+        color: "red",
+        icon: <IconX />,
+        position: "top-right",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <div className="p-6 max-w-4xl mx-auto">
@@ -32,67 +137,79 @@ export default function Page() {
               and departmental records.
             </p>
           </div>
-          <div className="flex flex-col gap-y-6 mt-8"></div>
-          <SimpleGrid cols={2} w={"100%"} verticalSpacing="lg">
-            <TextInput
-              label="Full Name"
-              placeholder="Enter your full name"
-              onChange={(e) => console.log(e.target.value)}
-            />
-            <TextInput
-              label="Email"
-              placeholder="Enter your email address"
-              onChange={(e) => console.log(e.target.value)}
-            />
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <div className="flex flex-col gap-y-6 mt-8">
+              <SimpleGrid cols={2} w={"100%"} verticalSpacing="lg">
+                <TextInput
+                  label="Full Name"
+                  placeholder="Enter your full name"
+                  {...form.getInputProps("full_name")}
+                />
+                <TextInput
+                  label="Email"
+                  placeholder="Enter your email address"
+                  {...form.getInputProps("email")}
+                  readOnly
+                />
 
-            <TextInput
-              label="Phone Number"
-              placeholder="Enter your phone number"
-              onChange={(e) => console.log(e.target.value)}
-            />
-            <TextInput
-              label="Start Date"
-              placeholder=""
-              onChange={(e) => console.log(e.target.value)}
-            />
+                <TextInput
+                  label="Phone Number"
+                  placeholder="Enter your phone number"
+                  {...form.getInputProps("phone_number")}
+                />
+                <DateInput
+                  label="Start Date"
+                  placeholder="Select start date"
+                  valueFormat="DD/MM/YYYY"
+                  {...form.getInputProps("start_date")}
+                />
 
-            <TextInput
-              label="Department"
-              placeholder="eg: Administration"
-              onChange={(e) => console.log(e.target.value)}
-            />
-            <TextInput
-              label="Position"
-              placeholder="eg: Manager"
-              onChange={(e) => console.log(e.target.value)}
-            />
-          </SimpleGrid>
+                <TextInput
+                  label="Department"
+                  placeholder="eg: Administration"
+                  {...form.getInputProps("department")}
+                />
+                <TextInput
+                  label="Position"
+                  placeholder="eg: Manager"
+                  {...form.getInputProps("position")}
+                />
+              </SimpleGrid>
+              <TextField
+                mt={"xl"}
+                label="Technical Skills"
+                placeholder="eg: Resources management"
+                caption="Enter your key skills separated by commas"
+                {...form.getInputProps("technical_skills")}
+              />
+              <Textarea
+                mt={"lg"}
+                styles={{
+                  input: {
+                    minHeight: 100,
+                  },
+                }}
+                label="Professional Bio"
+                placeholder="Brief description of your professional background and experience"
+                {...form.getInputProps("professional_bio")}
+              />
 
-          <TextField
-            mt={"xl"}
-            label="Technical Skills"
-            placeholder="rg: Resources management"
-            caption="Enter your key skills separated by commas"
-            onChange={(e) => console.log(e.target.value)}
-          />
-          <Textarea
-            mt={"lg"}
-            styles={{
-              input: {
-                minHeight: 100,
-              },
-            }}
-            label="Professional Bio"
-            placeholder="Brief discription of your professional background and experience"
-            onChange={(e) => console.log(e.target.value)}
-          />
-
-          <Group justify="right" mt={"50"}>
-            <Button variant="default">Cancel</Button>
-            <Button variant="filled" color="dark">
-              Save Profile
-            </Button>
-          </Group>
+              <Group justify="right" mt={"50"}>
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    form.reset();
+                    router.back();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button variant="filled" color="dark" type="submit">
+                  Save Profile
+                </Button>
+              </Group>
+            </div>
+          </form>
         </Paper>
       </div>
     </div>
