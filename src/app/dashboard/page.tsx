@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Card,
@@ -16,8 +17,57 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useCustomGet } from "@/Hooks/useCustomGet";
+import { API_ENDPOINT } from "@/service/api/endpoints";
+import {
+  calculateCompletionPercentage,
+  calculateProfileCompletionPercentage,
+} from "@/Hooks/Helper";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { data } = useSession();
+
+  // API
+  const { data: onboarding } = useCustomGet<any>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/accepted-documents`,
+  });
+
+  const { data: MyProfile } = useCustomGet<any>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/employee-profile`,
+  });
+
+  const requiredDocs = ["coc", "company_profile", "vision_mission"];
+
+  const requiredProfile: string[] = [
+    "id",
+    "employee_id",
+    "full_name",
+    "email",
+    "phone_number",
+    "start_date",
+    "department",
+    "position",
+    "technical_skills",
+    "professional_bio",
+    "created_at",
+    "updated_at",
+  ];
+
+  const acceptedDocs = onboarding?.accepted_documents || [];
+
+  const acceptedProfile = MyProfile?.profile || [];
+
+  const onBoardingPercentage: number = calculateCompletionPercentage(
+    requiredDocs,
+    acceptedDocs
+  );
+
+  const ProfilePercentage: number = calculateProfileCompletionPercentage(
+    acceptedProfile,
+    requiredProfile
+  );
+
   const CardsData: {
     title: string;
     subtitle: string;
@@ -50,27 +100,27 @@ export default function DashboardPage() {
   const progressData = [
     {
       title: "Onboarding Score",
-      percentage: 65,
+      percentage: onBoardingPercentage,
       color: "#054EFA",
       buttonText: "Start Onboarding",
+      showButton: onBoardingPercentage == 0 && true,
     },
     {
       title: "Profile Score",
-      percentage: 83,
+      percentage: ProfilePercentage,
       color: "#000000",
       buttonText: "Complete Profile",
+      showButton: ProfilePercentage == 0 && true,
     },
     {
       title: "Document Score",
-      percentage: 91,
+      percentage: 0,
       color: "#FA9005",
       buttonText: "Upload Docs",
+      showButton: true,
     },
   ];
 
-  const { data } = useSession();
-
-  const router = useRouter();
   const handleprogress = (selected: string) => {
     if (selected === "Start Onboarding") {
       router.push("/dashboard/onboarding");
@@ -129,9 +179,9 @@ export default function DashboardPage() {
 
         {/* Progress Circles Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {progressData.map((item) => (
+          {progressData?.map((item) => (
             <div
-              key={item.title}
+              key={item?.title}
               className="flex flex-col items-center border-2 rounded-xl py-4"
             >
               <RingProgress
@@ -139,26 +189,28 @@ export default function DashboardPage() {
                 thickness={24}
                 label={
                   <Text size="xl" ta="center">
-                    {item.percentage}%
+                    {item?.percentage}%
                   </Text>
                 }
-                sections={[{ value: item.percentage, color: item.color }]}
+                sections={[{ value: item?.percentage, color: item?.color }]}
               />
               <Text size="xl" fw={700} mt="md" className="text-gray-800">
-                {item.percentage}%
+                {item?.percentage}%
               </Text>
               <Text size="sm" className="text-gray-600">
-                {item.title}
+                {item?.title}
               </Text>
-              <Button
-                onClick={() => handleprogress(item.buttonText)}
-                miw={"50%"}
-                color="#054EFA"
-                mt="md"
-                radius="lg"
-              >
-                {item.buttonText}
-              </Button>
+              {item?.showButton && (
+                <Button
+                  onClick={() => handleprogress(item.buttonText)}
+                  miw={"50%"}
+                  color="#054EFA"
+                  mt="md"
+                  radius="lg"
+                >
+                  {item.buttonText}
+                </Button>
+              )}
             </div>
           ))}
         </div>

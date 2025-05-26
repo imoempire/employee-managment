@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import "@mantine/core/styles.css";
-import '@mantine/dates/styles.css';
 import {
   ColorSchemeScript,
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import "@mantine/dropzone/styles.css";
 import ReactQueryProvider from "./context/ReactQueryProvider";
 import { Notifications } from "@mantine/notifications";
 import { SessionProvider } from "next-auth/react";
+
+import "./globals.css";
+import "@mantine/dropzone/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +47,7 @@ export default function RootLayout({
           >
             <MantineProvider>
               <Notifications />
-              <ReactQueryProvider>{children}</ReactQueryProvider>
+              {children}
             </MantineProvider>
           </body>
         </html>

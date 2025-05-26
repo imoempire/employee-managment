@@ -1,6 +1,15 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from "react";
 import { Button, Group, Text, Title } from "@mantine/core";
-import { IconPointFilled } from "@tabler/icons-react";
+import { IconCheck, IconPointFilled, IconX } from "@tabler/icons-react";
+import Link from "next/link";
+import { NextSegementValue } from "./types";
+import { showNotification } from "@mantine/notifications";
+import { useCustomPost } from "@/Hooks/useCustomPost";
+import { useSession } from "next-auth/react";
+import { API_ENDPOINT } from "@/service/api/endpoints";
+import { useCustomGet } from "@/Hooks/useCustomGet";
+import { isDocumentAccepted } from "@/Hooks/Helper";
 
 const InfoSession = ({
   title,
@@ -61,7 +70,11 @@ const AchieveSession = ({ title }: { title: string }) => {
   );
 };
 
-export default function CompanyProfile() {
+export default function CompanyProfile({
+  NextSegement,
+}: {
+  NextSegement: (value: NextSegementValue) => void;
+}) {
   const VisionMissions: { title: string; description: string }[] = [
     {
       title: "Company History",
@@ -84,6 +97,71 @@ export default function CompanyProfile() {
     },
   ];
 
+  // HOOKS
+  const { data } = useSession();
+
+  // API
+  const { data: onboarding } = useCustomGet<any>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/accepted-documents`,
+  });
+
+  const acceptedDocs = onboarding?.accepted_documents || [];
+
+  const isDocAccepted: boolean = isDocumentAccepted(
+    "company_profile",
+    acceptedDocs
+  );
+
+  // STATES
+  const [isloading, setisloading] = useState<boolean>(false);
+
+  // API
+  const POST_ACTION = useCustomPost<any>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/accept/company_profile`,
+    onSuccess: (data: any) => {
+      console.log(data, "DATA DAtA");
+      NextSegement(null);
+      showNotification({
+        title: "Success",
+        message: data?.message || "Changes saved successfully!",
+        color: "green",
+        icon: <IconCheck />,
+        position: "bottom-center",
+      });
+    },
+    onError: (error: any) => {
+      if (error?.data?.message === "Already accepted.") {
+        NextSegement(null);
+        return;
+      }
+      showNotification({
+        title: "Error",
+        message: error?.data?.message || "Something went wrong!",
+        color: "red",
+        icon: <IconX />,
+        position: "bottom-center",
+      });
+    },
+  });
+
+  const handleSubmit = async () => {
+    try {
+      setisloading(true);
+      POST_ACTION.mutate(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      // showNotification({
+      //   title: "Error",
+      //   message: error?.response?.data?.message || "Something went wrong!",
+      //   color: "red",
+      //   icon: <IconX />,
+      //   position: "top-right",
+      // });
+    } finally {
+      setisloading(false);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -104,12 +182,21 @@ export default function CompanyProfile() {
         ))}
       </div>
       <div className="mt-8">
-        <Group justify="space-between">
-          <Button variant="default">Back to Dashboard</Button>
-          <Button variant="filled" color={"dark"}>
-            Mark as Complete
-          </Button>
-        </Group>
+        {!isDocAccepted && (
+          <Group justify="space-between">
+            <Button component={Link} href={"/dashboard"} variant="default">
+              Back to Dashboard
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              loading={isloading}
+              variant="filled"
+              color={"dark"}
+            >
+              Mark as Complete
+            </Button>
+          </Group>
+        )}
       </div>
     </div>
   );
