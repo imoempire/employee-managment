@@ -65,7 +65,7 @@ export default function Home() {
           message: "Login successfully!",
           color: "green",
           icon: <IconCheck />,
-          position: "bottom-center",
+          position: "bottom-right",
         });
         router.replace("/dashboard");
         router.refresh();

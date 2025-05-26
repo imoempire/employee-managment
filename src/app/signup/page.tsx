@@ -84,7 +84,7 @@ export default function Page() {
           message: "Login successfully!",
           color: "green",
           icon: <IconCheck />,
-          position: "bottom-center",
+          position: "bottom-right",
         });
         router.replace("/dashboard");
         router.refresh();
@@ -120,7 +120,7 @@ export default function Page() {
             "Successfully registered! Please verify your account.",
           color: "green",
           icon: <IconCheck />,
-          position: "bottom-center",
+          position: "bottom-right",
         });
         setIsVerifying(true);
       }
@@ -150,7 +150,7 @@ export default function Page() {
           message: response?.message || "Account verified successfully!",
           color: "green",
           icon: <IconCheck />,
-          position: "bottom-center",
+          position: "bottom-right",
         });
         handleRegisterLogin(form.values);
       }

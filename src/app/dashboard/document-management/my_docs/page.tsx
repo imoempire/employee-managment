@@ -86,7 +86,7 @@ export default function Page() {
         message: data?.message || "Document uploaded successfully!",
         color: "green",
         icon: <IconCheck />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
       refetch();
     },
@@ -96,7 +96,7 @@ export default function Page() {
         message: error?.message || "Something went wrong!",
         color: "red",
         icon: <IconX />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
     },
   });
@@ -108,7 +108,7 @@ export default function Page() {
         message: "No file selected",
         color: "red",
         icon: <IconX />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
       return;
     }
@@ -126,7 +126,7 @@ export default function Page() {
         message: error?.message || "Something went wrong!",
         color: "red",
         icon: <IconX />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
     } finally {
       setIsloading(false);

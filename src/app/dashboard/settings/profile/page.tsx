@@ -113,7 +113,7 @@ export default function Page() {
         message: data?.message || "Changes saved successfully!",
         color: "green",
         icon: <IconCheck />,
-        // position: "bottom-center",
+        position: "bottom-right",
       });
     },
     onError: (error: any) => {
@@ -123,6 +123,7 @@ export default function Page() {
         message: error?.data?.errors?.message || "Something went wrong!",
         color: "red",
         icon: <IconX />,
+        position: "bottom-right",
       });
     },
   });
@@ -131,7 +132,7 @@ export default function Page() {
     try {
       setisloading(true);
       await POST_ACTION.mutateAsync(values);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
     } finally {
       setisloading(false);

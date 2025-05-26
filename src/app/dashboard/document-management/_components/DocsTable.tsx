@@ -1,8 +1,7 @@
+import React from "react";
 import { ActionIcon, Group, Table, Text } from "@mantine/core";
 import { IconEye, IconRepeat, IconTrashFilled } from "@tabler/icons-react";
-import React from "react";
 import { EmployeeDocDataTable } from "./Types";
-import dayjs from "dayjs";
 
 export default function DocsTable({
   data,
@@ -11,7 +10,7 @@ export default function DocsTable({
 }) {
   // Function to handle viewing the document
   const handleViewDocument = (url: string) => {
-    window.open(url, "_blank", "noopener,noreferrer"); // Opens URL in a new tab
+    window.open(url, "_blank", "noopener,noreferrer"); 
   };
 
   const rows = data?.map((document) => {
@@ -24,7 +23,7 @@ export default function DocsTable({
         </Table.Td>
         <Table.Td w="25%">{document.status}</Table.Td>
         <Table.Td w="25%">
-          {dayjs(document.date_uploaded).format("YYYY-MM-DD")}
+          {document?.date_uploaded}
         </Table.Td>
         <Table.Td w="25%">
           <Group gap={0}>
