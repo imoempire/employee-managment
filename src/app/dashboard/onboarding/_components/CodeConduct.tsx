@@ -81,7 +81,7 @@ export default function CodeConduct({
         message: data?.message || "Changes saved successfully!",
         color: "green",
         icon: <IconCheck />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
     },
     onError: (error: any) => {
@@ -94,7 +94,7 @@ export default function CodeConduct({
         message: error?.data?.message || "Something went wrong!",
         color: "red",
         icon: <IconX />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
     },
   });

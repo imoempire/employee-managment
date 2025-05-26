@@ -128,7 +128,7 @@ export default function VisionMission({
         message: data?.message || "Changes saved successfully!",
         color: "green",
         icon: <IconCheck />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
     },
     onError: (error: any) => {
@@ -143,7 +143,7 @@ export default function VisionMission({
         message: error?.data?.message || "Something went wrong!",
         color: "red",
         icon: <IconX />,
-        position: "bottom-center",
+        position: "bottom-right",
       });
     },
   });
@@ -152,7 +152,7 @@ export default function VisionMission({
     try {
       setisloading(true);
       POST_ACTION.mutate(null);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
       // showNotification({
       //   title: "Error",
