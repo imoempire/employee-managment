@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Center,
@@ -12,27 +13,38 @@ import {
   IconBook,
   IconShield,
   IconUsers,
-  IconBuilding,
+  // IconBuilding,
 } from "@tabler/icons-react";
 import CodeConduct from "./_components/CodeConduct";
 import VisionMission from "./_components/VisionMission";
 import CompanyProfile from "./_components/Profile";
-import OrgStructure from "./_components/OrgStructure";
-
-type SegmentValues =
-  | "Code of Conduct"
-  | "Vision & Mission"
-  | "Company Profile"
-  | "Org Structure";
+import { NextSegementValue, SegmentValues } from "./_components/types";
+import { useRouter } from "next/navigation";
+import { useCustomGet } from "@/Hooks/useCustomGet";
+import { API_ENDPOINT } from "@/service/api/endpoints";
+import { useSession } from "next-auth/react";
+import { calculateCompletionPercentage } from "@/Hooks/Helper";
+// import OrgStructure from "./_components/OrgStructure";
 
 export default function Page() {
+  const router = useRouter();
+  const { data } = useSession();
   const [value, setValue] = useState<SegmentValues>("Code of Conduct");
 
+  const NextSegement = (value: NextSegementValue) => {
+    if (!value) {
+      console.log(value, "GHGHGHG");
+      router.replace("/dashboard");
+      return;
+    }
+    if (value !== null) setValue(value);
+  };
+
   const Tabs: Record<SegmentValues, JSX.Element> = {
-    "Code of Conduct": <CodeConduct />,
-    "Vision & Mission": <VisionMission />,
-    "Company Profile": <CompanyProfile />,
-    "Org Structure": <OrgStructure />,
+    "Code of Conduct": <CodeConduct NextSegement={NextSegement} />,
+    "Vision & Mission": <VisionMission NextSegement={NextSegement} />,
+    "Company Profile": <CompanyProfile NextSegement={NextSegement} />,
+    // "Org Structure": <OrgStructure />,
   };
 
   const segmentData = [
@@ -66,22 +78,34 @@ export default function Page() {
       ),
       value: "Company Profile",
     },
-    {
-      label: (
-        <Center style={{ gap: 6 }}>
-          <IconBuilding size={16} />
-          <span className="hidden sm:inline">Org Structure</span>
-          <span className="sm:hidden text-xs">Structure</span>
-        </Center>
-      ),
-      value: "Org Structure",
-    },
+    // {
+    //   label: (
+    //     <Center style={{ gap: 6 }}>
+    //       <IconBuilding size={16} />
+    //       <span className="hidden sm:inline">Org Structure</span>
+    //       <span className="sm:hidden text-xs">Structure</span>
+    //     </Center>
+    //   ),
+    //   value: "Org Structure",
+    // },
   ];
+
+  // API
+  const { data: onboarding } = useCustomGet<{ accepted_documents: string[] }>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/accepted-documents`,
+  });
+  const acceptedDocs = onboarding?.accepted_documents || [];
+  const requiredDocs = ["coc", "company_profile", "vision_mission"];
+
+  const onBoardingPercentage: number = calculateCompletionPercentage(
+    requiredDocs,
+    acceptedDocs
+  );
 
   return (
     <div className="min-h-screen">
       {/* Main Content */}
-      <div className="p-4 sm:p-6 max-w-4xl mx-auto">
+      <div className="container mx-auto p-6">
         <div>
           <Title order={1} className="text-2xl sm:text-3xl">
             Employee Onboarding
@@ -109,10 +133,10 @@ export default function Page() {
                 c={"#64748B"}
                 className="text-xs sm:text-sm"
               >
-                0/4 sections completed
+                {acceptedDocs?.length}/3 sections completed
               </Text>
             </div>
-            <Progress value={0} />
+            <Progress value={onBoardingPercentage || 0} />
           </div>
         </Paper>
 

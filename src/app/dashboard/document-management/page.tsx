@@ -12,6 +12,7 @@ import {
 import {
   IconClock,
   IconFolder,
+  IconMenuDeep,
   IconRosetteDiscountCheck,
   IconXboxX,
 } from "@tabler/icons-react";
@@ -59,65 +60,73 @@ export default function Page() {
     },
   ];
 
+  const DATA = [
+    {
+      label: (
+        <Center style={{ gap: 10 }}>
+          <span>Overview</span>
+        </Center>
+      ),
+      value: "overview",
+    },
+    {
+      label: (
+        <Center style={{ gap: 10 }}>
+          <span>Policies</span>
+        </Center>
+      ),
+      value: "policies",
+    },
+    {
+      label: (
+        <Center style={{ gap: 10 }}>
+          <span>Procedures</span>
+        </Center>
+      ),
+      value: "procedures",
+    },
+    {
+      label: (
+        <Center style={{ gap: 10 }}>
+          <span>Training Materials</span>
+        </Center>
+      ),
+      value: "training",
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       <div className="container mx-auto p-6">
-        <SegmentedControl
-          value={value}
-          onChange={(val) => setValue(val as SegmentValues)}
-          color="#0039C8"
-          size="lg"
-          radius={"xl"}
-          withItemsBorders={false}
-          w={"60%"}
-          data={[
-            {
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <span>Overview</span>
-                </Center>
-              ),
-              value: "overview",
-            },
-            {
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <span>Policies</span>
-                </Center>
-              ),
-              value: "policies",
-            },
-            {
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <span>Procedures</span>
-                </Center>
-              ),
-              value: "procedures",
-            },
-            {
-              label: (
-                <Center style={{ gap: 10 }}>
-                  <span>Training Materials</span>
-                </Center>
-              ),
-              value: "training",
-            },
-          ]}
-        />
-        {value === "overview" && (
-          <div className="mt-16 ">
+        <div className="flex justify-between">
+          <div>
+            <SegmentedControl
+              value={value}
+              onChange={(val) => setValue(val as SegmentValues)}
+              color="#0039C8"
+              size="lg"
+              radius={"xl"}
+              withItemsBorders={false}
+              w={"150%"}
+              data={DATA}
+            />
+          </div>
+          {value === "overview" && (
             <Link href={`${pathname}/my_docs`}>
               <Button
-                size="md"
-                mb={"xl"}
+                size="lg"
                 variant="filled"
                 radius={"xl"}
                 color="#054EFA"
+                leftSection={<IconMenuDeep />}
               >
-                My Documents
+                My Documentss
               </Button>
             </Link>
+          )}
+        </div>
+        {value === "overview" && (
+          <div className="mt-16 ">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
               {CardsData?.map((card, index) => {
                 return (

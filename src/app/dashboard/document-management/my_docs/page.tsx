@@ -31,6 +31,7 @@ import { showNotification } from "@mantine/notifications";
 import { useCustomPost } from "@/Hooks/useCustomPost";
 import { useSession } from "next-auth/react";
 import { useCustomGet } from "@/Hooks/useCustomGet";
+import { EmployeeDocData } from "../_components/Types";
 
 interface FormValues {
   documentType: string;
@@ -45,10 +46,17 @@ export default function Page() {
   const [isloading, setIsloading] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  // TABLE DATA
+  const { data: EmployeeDocs, refetch } = useCustomGet<EmployeeDocData>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/document-list`,
+  });
+
   //API DATA
   const { data: DocumentType } = useCustomGet<{ available_types: string[] }>({
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/available-document-types`,
   });
+
+  console.log(EmployeeDocs?.documents, "EmployeeDocs");
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -80,6 +88,7 @@ export default function Page() {
         icon: <IconCheck />,
         position: "bottom-center",
       });
+      refetch();
     },
     onError: (error: any) => {
       showNotification({
@@ -154,32 +163,34 @@ export default function Page() {
   }, [previewUrl]);
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto p-6">
-        <Flex justify={"space-between"}>
-          <ActionIcon
-            color={"#054EFA"}
-            variant="filled"
-            aria-label="Back"
-            radius={"xl"}
-            size={"xl"}
-            mb={"xl"}
-            onClick={() => router.back()}
-          >
-            <IconArrowNarrowLeft />
-          </ActionIcon>
-          <Button
-            size="md"
-            mb={"xl"}
-            variant="filled"
-            radius={"xl"}
-            color="#054EFA"
-            onClick={open}
-          >
-            Add New Document
-          </Button>
-        </Flex>
-        <DocsTable />
+    <>
+      <div className="min-h-screen">
+        <div className="container mx-auto p-6">
+          <Flex justify={"space-between"}>
+            <ActionIcon
+              color={"#054EFA"}
+              variant="filled"
+              aria-label="Back"
+              radius={"xl"}
+              size={"xl"}
+              // mb={"xl"}
+              onClick={() => router.back()}
+            >
+              <IconArrowNarrowLeft />
+            </ActionIcon>
+            <Button
+              size="md"
+              mb={"xl"}
+              variant="filled"
+              radius={"xl"}
+              color="#054EFA"
+              onClick={open}
+            >
+              Add New Document
+            </Button>
+          </Flex>
+          <DocsTable data={EmployeeDocs?.documents} />
+        </div>
       </div>
       <Modal
         centered
@@ -192,7 +203,7 @@ export default function Page() {
         }}
         title="Add Documents"
         closeOnClickOutside={false}
-        p={"xl"}
+        // p={"xl"}
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Flex mb={"lg"}>
@@ -220,6 +231,7 @@ export default function Page() {
             </Text>
 
             <Dropzone
+              multiple={false}
               onDrop={handleDrop}
               onReject={(files) => {
                 form.setFieldError(
@@ -282,9 +294,9 @@ export default function Page() {
                         radius="md"
                         src={previewUrl}
                         alt={form.values.file.name}
-                        w={100}
-                        h={100}
-                        fit="contain"
+                        w={"100%"}
+                        h={200}
+                        fit="fill"
                         style={{ marginTop: "10px" }}
                       />
                     </>
@@ -323,6 +335,6 @@ export default function Page() {
           </div>
         </form>
       </Modal>
-    </div>
+    </>
   );
 }

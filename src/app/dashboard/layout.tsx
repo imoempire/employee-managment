@@ -10,7 +10,6 @@ import {
 } from "@tabler/icons-react";
 import { getSession, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-// import { performSignOut } from "../_methods";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();

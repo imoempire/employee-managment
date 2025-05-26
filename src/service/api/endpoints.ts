@@ -12,4 +12,5 @@ export const API_ENDPOINT = {
     BASE_ENDPOINT + "/employee/resend-verification-email",
   // DASHBOARD
   EMPLOYEE: "/employee",
+
 };

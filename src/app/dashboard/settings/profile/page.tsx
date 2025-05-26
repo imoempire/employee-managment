@@ -8,7 +8,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "../_components/TextField";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -41,7 +41,8 @@ export default function Page() {
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/employee-profile`,
   });
 
-  console.log(MyProfile?.profile, "MyProfile");
+  // STATES
+  const [isloading, setisloading] = useState<boolean>(false);
 
   // Add
   const form = useForm<EmployeeFormData>({
@@ -87,7 +88,10 @@ export default function Page() {
       form.setFieldValue("department", profile.department);
       form.setFieldValue("full_name", profile.full_name);
       form.setFieldValue("phone_number", profile.phone_number);
-      form.setFieldValue("start_date", profile.start_date ? new Date(profile.start_date) : null);
+      form.setFieldValue(
+        "start_date",
+        profile.start_date ? new Date(profile.start_date) : null
+      );
       form.setFieldValue("position", profile.position);
       form.setFieldValue("technical_skills", profile.technical_skills);
       form.setFieldValue("professional_bio", profile.professional_bio);
@@ -96,40 +100,41 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [MyProfile?.profile]);
 
+  const completedProfile = Object.values(form.values).every(
+    (value) => value !== null && value !== ""
+  );
+
   const POST_ACTION = useCustomPost<EmployeeFormData>({
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`,
     onSuccess: (data: any) => {
-      router.back();
+      router.replace("/dashboard");
       showNotification({
         title: "Success",
         message: data?.message || "Changes saved successfully!",
         color: "green",
         icon: <IconCheck />,
-        position: "bottom-center",
+        // position: "bottom-center",
       });
     },
     onError: (error: any) => {
+      console.log(error);
       showNotification({
         title: "Error",
-        message: error?.message || "Something went wrong!",
+        message: error?.data?.errors?.message || "Something went wrong!",
         color: "red",
         icon: <IconX />,
-        position: "bottom-center",
       });
     },
   });
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
+      setisloading(true);
       await POST_ACTION.mutateAsync(values);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
-      showNotification({
-        title: "Error",
-        message: error?.response?.data?.message || "Something went wrong!",
-        color: "red",
-        icon: <IconX />,
-        position: "top-right",
-      });
+    } finally {
+      setisloading(false);
     }
   };
 
@@ -163,10 +168,9 @@ export default function Page() {
                   {...form.getInputProps("full_name")}
                 />
                 <TextInput
-                  label="Email"
-                  placeholder="Enter your email address"
+                  label="Work Email"
+                  placeholder="Enter your work email address"
                   {...form.getInputProps("email")}
-                  readOnly
                 />
 
                 <TextInput
@@ -211,20 +215,27 @@ export default function Page() {
                 {...form.getInputProps("professional_bio")}
               />
 
-              <Group justify="right" mt={"50"}>
-                <Button
-                  variant="default"
-                  onClick={() => {
-                    form.reset();
-                    router.back();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button variant="filled" color="dark" type="submit">
-                  Save Profile
-                </Button>
-              </Group>
+              {completedProfile && (
+                <Group justify="right" mt={"50"}>
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      form.reset();
+                      router.back();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="filled"
+                    color="dark"
+                    type="submit"
+                    loading={isloading}
+                  >
+                    Save Profile
+                  </Button>
+                </Group>
+              )}
             </div>
           </form>
         </Paper>

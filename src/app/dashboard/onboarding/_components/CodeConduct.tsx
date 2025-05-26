@@ -1,5 +1,15 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from "react";
 import { Button, Group, Text, Title } from "@mantine/core";
+import Link from "next/link";
+import { showNotification } from "@mantine/notifications";
+import { useCustomPost } from "@/Hooks/useCustomPost";
+import { API_ENDPOINT } from "@/service/api/endpoints";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import { NextSegementValue } from "./types";
+import { useCustomGet } from "@/Hooks/useCustomGet";
+import { isDocumentAccepted } from "@/Hooks/Helper";
 
 const ConductSession = ({
   title,
@@ -18,12 +28,16 @@ const ConductSession = ({
   );
 };
 
-export default function CodeConduct() {
+export default function CodeConduct({
+  NextSegement,
+}: {
+  NextSegement: (value: NextSegementValue) => void;
+}) {
   const Conducts: { title: string; description: string }[] = [
     {
       title: "Professional Conduct",
       description:
-        "We expect all employees to conduct themselves professionally and ethically. This means treating others with respect, honesty, and fairness at all times.ƒ",
+        "We expect all employees to conduct themselves professionally and ethically. This means treating others with respect, honesty, and fairness at all times.",
     },
     {
       title: "Respect in the Workplace",
@@ -41,6 +55,67 @@ export default function CodeConduct() {
         "Protect confidential information about our company, our customers, and your colleagues. Do not disclose sensitive information to unauthorized individuals.",
     },
   ];
+
+  // HOOKS
+  const { data } = useSession();
+
+  // API
+  const { data: onboarding } = useCustomGet<any>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/accepted-documents`,
+  });
+
+  const acceptedDocs = onboarding?.accepted_documents || [];
+
+  const isDocAccepted: boolean = isDocumentAccepted("coc", acceptedDocs);
+
+  // STATES
+  const [isloading, setisloading] = useState<boolean>(false);
+
+  // API
+  const POST_ACTION = useCustomPost<any>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/accept/coc`,
+    onSuccess: (data: any) => {
+      NextSegement("Vision & Mission");
+      showNotification({
+        title: "Success",
+        message: data?.message || "Changes saved successfully!",
+        color: "green",
+        icon: <IconCheck />,
+        position: "bottom-center",
+      });
+    },
+    onError: (error: any) => {
+      if (error?.data?.message === "Already accepted.") {
+        NextSegement("Vision & Mission");
+        return;
+      }
+      showNotification({
+        title: "Error",
+        message: error?.data?.message || "Something went wrong!",
+        color: "red",
+        icon: <IconX />,
+        position: "bottom-center",
+      });
+    },
+  });
+
+  const handleSubmit = async () => {
+    try {
+      setisloading(true);
+      POST_ACTION.mutate(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      // showNotification({
+      //   title: "Error",
+      //   message: error?.response?.data?.message || "Something went wrong!",
+      //   color: "red",
+      //   icon: <IconX />,
+      //   position: "top-right",
+      // });
+    } finally {
+      setisloading(false);
+    }
+  };
 
   return (
     <div>
@@ -60,10 +135,21 @@ export default function CodeConduct() {
         ))}
       </div>
       <div className="mt-8">
-        <Group justify="space-between">
-          <Button variant="default">Back to Dashboard</Button>
-          <Button variant="filled" color={'dark'} >Mark as Complete</Button>
-        </Group>
+        {isDocAccepted && (
+          <Group justify="space-between">
+            <Button component={Link} href={"/dashboard"} variant="default">
+              Back to Dashboard
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              loading={isloading}
+              variant="filled"
+              color={"dark"}
+            >
+              Mark as Complete
+            </Button>
+          </Group>
+        )}
       </div>
     </div>
   );
