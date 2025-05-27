@@ -47,14 +47,25 @@ export default function Page() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   // TABLE DATA
-  const { data: EmployeeDocs, refetch } = useCustomGet<EmployeeDocData>({
+  const {
+    data: EmployeeDocs,
+    refetch,
+    isLoading,
+  } = useCustomGet<EmployeeDocData>({
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/document-list`,
   });
 
   //API DATA
-  const { data: DocumentType } = useCustomGet<{ available_types: string[] }>({
+  const { data: DocumentType, refetch: DocumentTypeRefetch } = useCustomGet<{
+    available_types: string[];
+  }>({
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/available-document-types`,
   });
+
+  const REFECH = () => {
+    refetch();
+    DocumentTypeRefetch();
+  };
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -187,7 +198,11 @@ export default function Page() {
               Add New Document
             </Button>
           </Flex>
-          <DocsTable data={EmployeeDocs?.documents} />
+          <DocsTable
+            isLoading={isLoading}
+            refetch={REFECH}
+            data={EmployeeDocs?.documents}
+          />
         </div>
       </div>
       <Modal

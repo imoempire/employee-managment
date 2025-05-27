@@ -17,3 +17,7 @@ interface EmployeeProfile {
   created_at: string; // ISO date-time string (e.g., "2025-05-22T14:05:54.000000Z")
   updated_at: string; // ISO date-time string (e.g., "2025-05-22T14:05:54.000000Z")
 }
+
+export interface Profile {
+  [key: string]: string | number | undefined | null;
+}
