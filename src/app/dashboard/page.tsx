@@ -21,8 +21,10 @@ import { useCustomGet } from "@/Hooks/useCustomGet";
 import { API_ENDPOINT } from "@/service/api/endpoints";
 import {
   calculateCompletionPercentage,
+  calculateDocumentCompletion,
   calculateProfileCompletionPercentage,
 } from "@/Hooks/Helper";
+import { EmployeeDocData } from "./document-management/_components/Types";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -35,6 +37,10 @@ export default function DashboardPage() {
 
   const { data: MyProfile } = useCustomGet<any>({
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/employee-profile`,
+  });
+
+  const { data: EmployeeDocs } = useCustomGet<EmployeeDocData>({
+    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/document-list`,
   });
 
   const requiredDocs = ["coc", "company_profile", "vision_mission"];
@@ -58,41 +64,42 @@ export default function DashboardPage() {
 
   const acceptedProfile = MyProfile?.profile || [];
 
-  const onBoardingPercentage: number = calculateCompletionPercentage(
-    requiredDocs,
-    acceptedDocs
-  );
+  const onBoardingPercentage: number =
+    calculateCompletionPercentage(requiredDocs, acceptedDocs) || 0;
 
-  const ProfilePercentage: number = calculateProfileCompletionPercentage(
-    acceptedProfile,
-    requiredProfile
-  );
+  const ProfilePercentage: number =
+    calculateProfileCompletionPercentage(acceptedProfile, requiredProfile) || 0;
+
+  const docuPerentage: number =
+    calculateDocumentCompletion(EmployeeDocs?.documents || []) || 0;
 
   const CardsData: {
     title: string;
     subtitle: string;
-    count?: string;
+    barColor?: string;
     color: string;
     Icon: React.ReactNode;
   }[] = [
     {
-      title: "Your progress",
-      subtitle: "training item completed",
-      count: "0",
+      title: "Onboarding",
+      subtitle: `You have ${onBoardingPercentage}% score`,
       color: "#054EFA",
-      Icon: <IconDeviceDesktopAnalytics size={70} color="white" />,
+      Icon: <IconUserStar size={70} color="white" />,
+      barColor: "#0438B4",
     },
     {
-      title: "Onboarding",
-      subtitle: "You have 65% score",
-      color: "#228039",
-      Icon: <IconUserStar size={70} color="white" />,
+      title: "Your profile",
+      subtitle: `${ProfilePercentage}% profile score`,
+      color: "#000000",
+      Icon: <IconDeviceDesktopAnalytics size={70} color="white" />,
+      barColor: "#696969",
     },
     {
       title: "Your documents",
-      subtitle: "documents uploaded",
-      color: "#FA9005",
+      subtitle: `${EmployeeDocs?.documents.length || 0} documents uploaded`,
+      color: "#228039",
       Icon: <IconFolder size={70} color="white" />,
+      barColor: "#11421E",
     },
   ];
 
@@ -103,21 +110,21 @@ export default function DashboardPage() {
       percentage: onBoardingPercentage,
       color: "#054EFA",
       buttonText: "Start Onboarding",
-      showButton: onBoardingPercentage == 0 && true,
+      showButton: onBoardingPercentage < 100 ? true : false,
     },
     {
       title: "Profile Score",
       percentage: ProfilePercentage,
       color: "#000000",
       buttonText: "Complete Profile",
-      showButton: ProfilePercentage == 0 && true,
+      showButton: ProfilePercentage < 100 && true,
     },
     {
       title: "Document Score",
-      percentage: 0,
-      color: "#FA9005",
+      percentage: docuPerentage,
+      color: "#228039",
       buttonText: "Upload Docs",
-      showButton: true,
+      showButton: docuPerentage < 100 && true,
     },
   ];
 
@@ -166,11 +173,11 @@ export default function DashboardPage() {
                         {card.title}
                       </Text>
                       <Text c={"#ffffff"} size="sm">
-                        {card?.count && card.count} {card.subtitle}
+                        {card.subtitle}
                       </Text>
                     </Stack>
                   </Group>
-                  <Divider size={6} color="#00000047" />
+                  <Divider size={6} color={card.barColor || "#00000047"} />
                 </Stack>
               </Card>
             );

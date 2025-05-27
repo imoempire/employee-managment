@@ -1,24 +1,24 @@
-import { ActionIcon, Group, Paper, Table } from "@mantine/core";
-import { IconDownload, IconEye } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Center,
+  Group,
+  Paper,
+  Stack,
+  Table,
+  Text,
+} from "@mantine/core";
+import { IconDownload, IconEye, IconMoodEmpty } from "@tabler/icons-react";
 import React from "react";
 
 export default function PolicyTable() {
-  const documents = [
-    {
-      policyTitle: "Code of Conduct",
-      category: "HR",
-      lastUpdatedDate: "2022-01-01",
-      status: "Not Acknowledged",
-    },
-    {
-      policyTitle: "Document 2Leave Policy",
-      category: "HR",
-      lastUpdatedDate: "2022-02-01",
-      status: "Acknowledged",
-    },
-  ];
+  const documents: {
+    policyTitle: string;
+    category: string;
+    lastUpdatedDate: string;
+    status: string;
+  }[] = [];
 
-  const rows = documents.map((document, index) => (
+  const rows = documents?.map((document, index) => (
     <Table.Tr key={index}>
       <Table.Td>{document.policyTitle}</Table.Td>
       <Table.Td>{document.category}</Table.Td>
@@ -29,7 +29,6 @@ export default function PolicyTable() {
           <ActionIcon c={"dark"} variant="subtle" size="xl">
             <IconEye />
           </ActionIcon>
-
           <ActionIcon c={"dark"} variant="subtle" size="xl">
             <IconDownload />
           </ActionIcon>
@@ -39,23 +38,36 @@ export default function PolicyTable() {
   ));
 
   return (
-    <>
-      <div className="flex flex-col gap-y-4">
-        <Paper>
-          <Table verticalSpacing="md">
-            <Table.Thead style={{ backgroundColor: "#054EFA", color: "white" }}>
+    <div className="flex flex-col gap-y-4">
+      <Paper>
+        <Table verticalSpacing="md">
+          <Table.Thead style={{ backgroundColor: "#054EFA", color: "white" }}>
+            <Table.Tr>
+              <Table.Th>Policy Title</Table.Th>
+              <Table.Th>Category</Table.Th>
+              <Table.Th>Last Updated Date</Table.Th>
+              <Table.Th>Status</Table.Th>
+              <Table.Th>Action</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {documents.length === 0 ? (
               <Table.Tr>
-                <Table.Th>Policy Title</Table.Th>
-                <Table.Th>Category</Table.Th>
-                <Table.Th>Last Updated Date</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Action</Table.Th>
+                <Table.Td colSpan={5} style={{ textAlign: "center" }}>
+                  <Center>
+                    <Stack gap={2} align="center" justify="center" >
+                      <IconMoodEmpty color="gray" />
+                      <Text c="dimmed">No data available</Text>
+                    </Stack>
+                  </Center>
+                </Table.Td>
               </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
-        </Paper>
-      </div>
-    </>
+            ) : (
+              rows
+            )}
+          </Table.Tbody>
+        </Table>
+      </Paper>
+    </div>
   );
 }
