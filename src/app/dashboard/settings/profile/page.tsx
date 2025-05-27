@@ -20,12 +20,13 @@ import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useCustomGet } from "@/Hooks/useCustomGet";
 import { ProfileResponse } from "@/Hooks/ApiDataTypes";
+import { calculateProfileCompletionPercentage } from "@/Hooks/Helper";
 
 interface EmployeeFormData {
   full_name: string;
   email: string;
   phone_number: string;
-  start_date: Date | null;
+  start_date: string;
   department: string;
   position: string;
   technical_skills: string;
@@ -50,7 +51,7 @@ export default function Page() {
       full_name: "",
       email: "",
       phone_number: "",
-      start_date: null,
+      start_date: "",
       department: "",
       position: "",
       technical_skills: "",
@@ -88,10 +89,7 @@ export default function Page() {
       form.setFieldValue("department", profile.department);
       form.setFieldValue("full_name", profile.full_name);
       form.setFieldValue("phone_number", profile.phone_number);
-      form.setFieldValue(
-        "start_date",
-        profile.start_date ? new Date(profile.start_date) : null
-      );
+      form.setFieldValue("start_date", profile.start_date);
       form.setFieldValue("position", profile.position);
       form.setFieldValue("technical_skills", profile.technical_skills);
       form.setFieldValue("professional_bio", profile.professional_bio);
@@ -104,8 +102,34 @@ export default function Page() {
     (value) => value !== null && value !== ""
   );
 
+  const requiredProfile: string[] = [
+    "id",
+    "employee_id",
+    "full_name",
+    "email",
+    "phone_number",
+    "start_date",
+    "department",
+    "position",
+    "technical_skills",
+    "professional_bio",
+    "created_at",
+    "updated_at",
+  ];
+
+  const acceptedProfile = MyProfile?.profile || [];
+  const ProfilePercentage: number =
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+    calculateProfileCompletionPercentage(acceptedProfile, requiredProfile) || 0;
+
+  const URL =
+    ProfilePercentage === 100
+      ? `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/update-profile`
+      : `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`;
+
   const POST_ACTION = useCustomPost<EmployeeFormData>({
-    url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`,
+    url: URL,
     onSuccess: (data: any) => {
       router.replace("/dashboard");
       showNotification({
@@ -131,7 +155,11 @@ export default function Page() {
   const handleSubmit = async (values: typeof form.values) => {
     try {
       setisloading(true);
-      await POST_ACTION.mutateAsync(values);
+      const DATA: typeof form.values = {
+        ...values,
+        // start_date: new Date(dayjs(values.start_date).format("YYYY-MM-DD")),
+      };
+      await POST_ACTION.mutateAsync(DATA);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
     } finally {
@@ -182,7 +210,7 @@ export default function Page() {
                 <DateInput
                   label="Start Date"
                   placeholder="Select start date"
-                  valueFormat="DD/MM/YYYY"
+                  valueFormat="YYYY MMM DD"
                   {...form.getInputProps("start_date")}
                 />
 

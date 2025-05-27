@@ -120,7 +120,7 @@ export default function Page() {
                 color="#054EFA"
                 leftSection={<IconMenuDeep />}
               >
-                My Documentss
+                My Documents
               </Button>
             </Link>
           )}
