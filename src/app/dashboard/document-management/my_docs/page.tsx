@@ -56,7 +56,6 @@ export default function Page() {
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/available-document-types`,
   });
 
-
   const form = useForm<FormValues>({
     initialValues: {
       documentType: "",
@@ -208,14 +207,7 @@ export default function Page() {
           <Flex mb={"lg"}>
             <Select
               w={"100%"}
-              data={
-                DocumentType?.available_types || [
-                  "ID",
-                  "Proof of Address",
-                  "Contract",
-                  "Certificate",
-                ]
-              }
+              data={DocumentType?.available_types || []}
               withAsterisk
               label={"Select Document Type"}
               placeholder="Select Document Type"
