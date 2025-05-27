@@ -135,7 +135,7 @@ export default function CodeConduct({
         ))}
       </div>
       <div className="mt-8">
-        {isDocAccepted && (
+        {!isDocAccepted && (
           <Group justify="space-between">
             <Button component={Link} href={"/dashboard"} variant="default">
               Back to Dashboard

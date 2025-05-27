@@ -56,7 +56,6 @@ export default function Page() {
     url: `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/available-document-types`,
   });
 
-  console.log(EmployeeDocs?.documents, "EmployeeDocs");
 
   const form = useForm<FormValues>({
     initialValues: {

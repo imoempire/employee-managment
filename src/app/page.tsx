@@ -57,8 +57,6 @@ export default function Home() {
         setError("Invalid email or password");
         return;
       }
-      console.log(response);
-
       if (response?.ok) {
         showNotification({
           title: "Success",
