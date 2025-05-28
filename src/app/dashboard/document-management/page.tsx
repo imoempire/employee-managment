@@ -20,11 +20,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import PolicyTable from "./_components/PolicyTable";
+import { useEmployeeDocuments } from "@/Hooks/useEmployeeDocuments";
+import { useSession } from "next-auth/react";
 
 type SegmentValues = "overview" | "policies" | "procedures" | "training";
 export default function Page() {
+  const { data: session } = useSession();
   const pathname = usePathname();
   const [value, setValue] = useState<SegmentValues>("overview");
+
+  // API DATA
+  const { data } = useEmployeeDocuments({
+    employeeId: session?.user?.id,
+  });
+
+  console.log(data);
 
   const CardsData: {
     title: string;
@@ -35,26 +45,26 @@ export default function Page() {
   }[] = [
     {
       title: "Total Documents",
-      subtitle: "0 uploaded documents",
+      subtitle: `${data.totalDocuments || 0} uploaded documents`,
       // count: "0",
       color: "#054EFA",
       Icon: <IconFolder size={70} color="white" />,
     },
     {
       title: "Pending Documents",
-      subtitle: "You have 0 pending",
+      subtitle: `You have ${data.pendingDocuments || 0} pending`,
       color: "#228039",
       Icon: <IconClock size={70} color="white" />,
     },
     {
       title: "Verified Documents",
-      subtitle: "0 Verified Documents",
+      subtitle: `${data.verifiedDocuments || 0} Verified Documents`,
       color: "#FA9005",
       Icon: <IconRosetteDiscountCheck size={70} color="white" />,
     },
     {
-      title: "Verified Documents",
-      subtitle: "0 Verified Documents",
+      title: "Rejected Documents",
+      subtitle: `${data.rejectedDocuments} Verified Documents`,
       color: "#FA9005",
       Icon: <IconXboxX size={70} color="white" />,
     },
