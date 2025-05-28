@@ -94,7 +94,7 @@ export default function DocsTable({
     const formData = new FormData();
     formData.append("document_type", values.document_type);
     if (values.file) {
-      formData.append("file", values.file);
+      formData.append("document", values.file);
     }
     editMutate(formData);
   };

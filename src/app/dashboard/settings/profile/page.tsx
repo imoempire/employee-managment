@@ -20,7 +20,6 @@ import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useCustomGet } from "@/Hooks/useCustomGet";
 import { ProfileResponse } from "@/Hooks/ApiDataTypes";
-import { calculateProfileCompletionPercentage } from "@/Hooks/Helper";
 
 interface EmployeeFormData {
   full_name: string;
@@ -102,31 +101,9 @@ export default function Page() {
     (value) => value !== null && value !== ""
   );
 
-  const requiredProfile: string[] = [
-    "id",
-    "employee_id",
-    "full_name",
-    "email",
-    "phone_number",
-    "start_date",
-    "department",
-    "position",
-    "technical_skills",
-    "professional_bio",
-    "created_at",
-    "updated_at",
-  ];
-
-  const acceptedProfile = MyProfile?.profile || [];
-  const ProfilePercentage: number =
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-    calculateProfileCompletionPercentage(acceptedProfile, requiredProfile) || 0;
-
-  const URL =
-    ProfilePercentage === 100
-      ? `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/update-profile`
-      : `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`;
+  const URL = completedProfile
+    ? `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/update-profile`
+    : `${API_ENDPOINT.EMPLOYEE}/${data?.user?.id}/complete-profile`;
 
   const POST_ACTION = useCustomPost<EmployeeFormData>({
     url: URL,
@@ -244,27 +221,25 @@ export default function Page() {
                 {...form.getInputProps("professional_bio")}
               />
 
-              {completedProfile && (
-                <Group justify="right" mt={"50"}>
-                  <Button
-                    variant="default"
-                    onClick={() => {
-                      form.reset();
-                      router.back();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="filled"
-                    color="dark"
-                    type="submit"
-                    loading={isloading}
-                  >
-                    Save Profile
-                  </Button>
-                </Group>
-              )}
+              <Group justify="right" mt={"50"}>
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    form.reset();
+                    router.back();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="filled"
+                  color="dark"
+                  type="submit"
+                  loading={isloading}
+                >
+                  Save Profile
+                </Button>
+              </Group>
             </div>
           </form>
         </Paper>
