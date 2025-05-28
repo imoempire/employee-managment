@@ -89,8 +89,6 @@ export default function DocsTable({
 
   
   const handleEdit = (values: { document_type: string; file?: File }) => {
-    console.log(values);
-    
     const formData = new FormData();
     formData.append("document_type", values.document_type);
     if (values.file) {
