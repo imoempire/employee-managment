@@ -7,8 +7,14 @@ import {
   Text,
   Skeleton,
   Center,
+  Menu,
 } from "@mantine/core";
-import { IconEye, IconRepeat, IconTrashFilled } from "@tabler/icons-react";
+import {
+  IconEye,
+  IconRepeat,
+  IconTrashFilled,
+  IconDotsVertical,
+} from "@tabler/icons-react";
 import { EmployeeDocDataTable } from "./Types";
 import { DeleteModal } from "@/Components/DeleteModal";
 import { useDisclosure } from "@mantine/hooks";
@@ -87,7 +93,6 @@ export default function DocsTable({
     mutate({ id: selectedDoc });
   };
 
-  
   const handleEdit = (values: { document_type: string; file?: File }) => {
     const formData = new FormData();
     formData.append("document_type", values.document_type);
@@ -107,7 +112,8 @@ export default function DocsTable({
       <Table.Td w="25%">{document.status}</Table.Td>
       <Table.Td w="25%">{document?.date_uploaded}</Table.Td>
       <Table.Td w="25%">
-        <Group gap={0}>
+        {/* Desktop view - show all action buttons */}
+        <Group gap={0} visibleFrom="sm">
           <ActionIcon
             c={"dark"}
             variant="subtle"
@@ -138,6 +144,45 @@ export default function DocsTable({
           >
             <IconTrashFilled />
           </ActionIcon>
+        </Group>
+
+        {/* Mobile view - show dots menu */}
+        <Group hiddenFrom="sm">
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <ActionIcon c={"dark"} variant="subtle" size="xl">
+                <IconDotsVertical />
+              </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconEye size={14} />}
+                onClick={() => handleViewDocument(document.view_document)}
+              >
+                View Document
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconRepeat size={14} />}
+                onClick={() => {
+                  setselectedDoc(document);
+                  openEdit();
+                }}
+              >
+                Edit Document
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconTrashFilled size={14} />}
+                color="red"
+                onClick={() => {
+                  setselectedDoc(document);
+                  open();
+                }}
+              >
+                Delete Document
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
       </Table.Td>
     </Table.Tr>
@@ -213,7 +258,7 @@ export default function DocsTable({
           documentType: selectedDoc?.document_name || "",
           documentUrl: selectedDoc?.view_document || "",
         }}
-        documentTypes={['ID', 'Contract', 'Certificate', "Proof of Address"]}
+        documentTypes={["ID", "Contract", "Certificate", "Proof of Address"]}
       />
     </div>
   );
