@@ -33,7 +33,6 @@ export default function Page() {
 
   const NextSegement = (value: NextSegementValue) => {
     if (!value) {
-      console.log(value, "GHGHGHG");
       router.replace("/dashboard");
       return;
     }

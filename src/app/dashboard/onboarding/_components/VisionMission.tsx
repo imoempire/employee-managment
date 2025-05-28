@@ -132,8 +132,6 @@ export default function VisionMission({
       });
     },
     onError: (error: any) => {
-      console.log(error?.data?.message);
-
       if (error?.data?.message === "Already accepted.") {
         NextSegement("Company Profile");
         return;

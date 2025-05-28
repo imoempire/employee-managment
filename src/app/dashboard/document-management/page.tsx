@@ -34,8 +34,6 @@ export default function Page() {
     employeeId: session?.user?.id,
   });
 
-  console.log(data);
-
   const CardsData: {
     title: string;
     subtitle: string;

@@ -118,7 +118,6 @@ export default function Page() {
       });
     },
     onError: (error: any) => {
-      console.log(error);
       showNotification({
         title: "Error",
         message: error?.data?.errors?.message || "Something went wrong!",

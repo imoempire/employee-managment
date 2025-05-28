@@ -52,8 +52,6 @@ export function EditModal({
     },
   });
 
-  // console.log(initialValues, 'initialValues');
-  
 
   // Initialize form values when initialValues change
   useEffect(() => {
@@ -94,8 +92,6 @@ export function EditModal({
   };
 
   const handleSubmit = (values: typeof form.values) => {
-    console.log(values);
-    
     onSubmit(values);
     form.reset();
     setPreviewUrl(null);
