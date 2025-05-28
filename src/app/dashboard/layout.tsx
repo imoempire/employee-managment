@@ -139,7 +139,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconSettings size={16} />}
-                component="link"
+                component={Link}
                 href="/dashboard/settings"
                 onClick={() => {
                   setMobileMenuOpened(false);

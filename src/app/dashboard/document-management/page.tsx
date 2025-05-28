@@ -6,8 +6,9 @@ import {
   Stack,
   Text,
   Divider,
-  Center,
   Button,
+  Paper,
+  Center,
 } from "@mantine/core";
 import {
   IconClock,
@@ -15,6 +16,10 @@ import {
   IconMenuDeep,
   IconRosetteDiscountCheck,
   IconXboxX,
+  IconEye,
+  IconShield,
+  IconFileText,
+  IconSchool,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,6 +29,7 @@ import { useEmployeeDocuments } from "@/Hooks/useEmployeeDocuments";
 import { useSession } from "next-auth/react";
 
 type SegmentValues = "overview" | "policies" | "procedures" | "training";
+
 export default function Page() {
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -44,7 +50,6 @@ export default function Page() {
     {
       title: "Total Documents",
       subtitle: `${data.totalDocuments || 0} uploaded documents`,
-      // count: "0",
       color: "#054EFA",
       Icon: <IconFolder size={70} color="white" />,
     },
@@ -62,41 +67,50 @@ export default function Page() {
     },
     {
       title: "Rejected Documents",
-      subtitle: `${data.rejectedDocuments} Verified Documents`,
+      subtitle: `${data.rejectedDocuments || 0} Rejected Documents`,
       color: "#FA9005",
       Icon: <IconXboxX size={70} color="white" />,
     },
   ];
 
-  const DATA = [
+  // Enhanced data with icons and responsive labels
+  const segmentData = [
     {
       label: (
-        <Center style={{ gap: 10 }}>
-          <span>Overview</span>
+        <Center style={{ gap: 6 }}>
+          <IconEye size={16} />
+          <span className="hidden sm:inline">Overview</span>
+          <span className="sm:hidden text-xs">Overview</span>
         </Center>
       ),
       value: "overview",
     },
     {
       label: (
-        <Center style={{ gap: 10 }}>
-          <span>Policies</span>
+        <Center style={{ gap: 6 }}>
+          <IconShield size={16} />
+          <span className="hidden sm:inline">Policies</span>
+          <span className="sm:hidden text-xs">Policy</span>
         </Center>
       ),
       value: "policies",
     },
     {
       label: (
-        <Center style={{ gap: 10 }}>
-          <span>Procedures</span>
+        <Center style={{ gap: 6 }}>
+          <IconFileText size={16} />
+          <span className="hidden sm:inline">Procedures</span>
+          <span className="sm:hidden text-xs">Proc</span>
         </Center>
       ),
       value: "procedures",
     },
     {
       label: (
-        <Center style={{ gap: 10 }}>
-          <span>Training Materials</span>
+        <Center style={{ gap: 6 }}>
+          <IconSchool size={16} />
+          <span className="hidden sm:inline">Training Materials</span>
+          <span className="sm:hidden text-xs">Training</span>
         </Center>
       ),
       value: "training",
@@ -106,66 +120,76 @@ export default function Page() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto p-6">
-        <div className="flex justify-between">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          {/* Responsive SegmentedControl - hidden on very small screens */}
+          <Paper my="xl" className="hidden xs:block w-full sm:w-auto">
             <SegmentedControl
               value={value}
               onChange={(val) => setValue(val as SegmentValues)}
               color="#0039C8"
-              size="lg"
-              radius={"xl"}
+              size="lg" // Smaller size for better mobile fit
+              radius="xl"
               withItemsBorders={false}
-              w={"150%"}
-              data={DATA}
+              fullWidth
+              data={segmentData}
+              styles={{
+              root: {
+                overflow: "auto",
+              },
+            }}
             />
-          </div>
+          </Paper>
+
+          {/* My Documents Button */}
           {value === "overview" && (
             <Link href={`${pathname}/my_docs`}>
               <Button
-                size="lg"
+                // size={"lg"}
                 variant="filled"
-                radius={"xl"}
+                radius="xl"
                 color="#054EFA"
                 leftSection={<IconMenuDeep />}
+                className="w-full sm:w-auto"
               >
-                My Documents
+                <span>My Documents</span>
+                {/* <span className="sm:hidden">Docs</span> */}
               </Button>
             </Link>
           )}
         </div>
+
         {value === "overview" && (
-          <div className="mt-16 ">
+          <div className="mt-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-              {CardsData?.map((card, index) => {
-                return (
-                  <Card
-                    key={index}
-                    shadow="sm"
-                    padding="xl"
-                    radius="40"
-                    bg={"#0039C8"}
-                    className="text-white"
-                  >
-                    <Stack>
-                      <Group gap="xs">
-                        {card.Icon}
-                        <Stack gap={0}>
-                          <Text c={"#ffffff"} size="md">
-                            {card.title}
-                          </Text>
-                          <Text c={"#ffffff"} size="sm">
-                            {card?.count && card.count} {card.subtitle}
-                          </Text>
-                        </Stack>
-                      </Group>
-                      <Divider size={6} color="#00000047" />
-                    </Stack>
-                  </Card>
-                );
-              })}
+              {CardsData?.map((card, index) => (
+                <Card
+                  key={index}
+                  shadow="sm"
+                  padding="xl"
+                  radius="40"
+                  bg={"#0039C8"}
+                  className="text-white"
+                >
+                  <Stack>
+                    <Group gap="xs">
+                      {card.Icon}
+                      <Stack gap={0}>
+                        <Text c={"#ffffff"} size="md">
+                          {card.title}
+                        </Text>
+                        <Text c={"#ffffff"} size="sm">
+                          {card?.count && card.count} {card.subtitle}
+                        </Text>
+                      </Stack>
+                    </Group>
+                    <Divider size={6} color="#00000047" />
+                  </Stack>
+                </Card>
+              ))}
             </div>
           </div>
         )}
+
         {value === "policies" && (
           <div className="mt-16 w-full lg:w-[70%]">
             <PolicyTable />
