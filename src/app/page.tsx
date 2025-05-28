@@ -92,6 +92,12 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => setError(''), 5000);
+    }
+  }, [error]);
+
   if (status === "loading") {
     return (
       <Box
@@ -137,7 +143,7 @@ export default function Home() {
           </Title>
 
           {!!error && (
-            <Text c="red" ta="center">
+            <Text c="red" ta="center" mb={'md'}>
               {error}
             </Text>
           )}
