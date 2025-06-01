@@ -10,10 +10,7 @@ import { Notifications } from "@mantine/notifications";
 import { SessionProvider } from "next-auth/react";
 
 import "./globals.css";
-import "@mantine/dropzone/styles.css";
-import "@mantine/dates/styles.css";
-import "@mantine/core/styles.css";
-import "@mantine/notifications/styles.css";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
