@@ -12,16 +12,16 @@ import { useCustomGet } from "@/Hooks/useCustomGet";
 import { isDocumentAccepted } from "@/Hooks/Helper";
 
 const InfoSession = ({
-  title,
+  // title,
   description,
 }: {
-  title: string;
+  title?: string;
   description: string;
 }) => {
   return (
     <div>
       <Title order={4} mb={"md"}>
-        {title}
+        {/* {title} */}
       </Title>
       <Text mt={"sm"} size="md">
         {description}
@@ -32,23 +32,24 @@ const InfoSession = ({
 
 const DATA = [
   {
-    description: "Recognized as a top employer for 5 consecutive years",
+    description: "Drones become guardians, soaring over our local homes & remote areas, ensuring your safety.",
   },
   {
-    description: "Over 500 enterprise clients worldwide",
+    description: "Fields bloom with precision agriculture, banishing hunger with data-driven harvests.",
   },
-  {
-    description: "Industry-leading customer satisfaction ratings",
-  },
-  {
-    description: "Multiple awards for product innovation",
-  },
-  {
-    description: "Consistent annual growth since founding",
-  },
+  // {
+  //   description: "Industry-leading customer satisfaction ratings",
+  // },
+  // {
+  //   description: "Multiple awards for product innovation",
+  // },
+  // {
+  //   description: "Consistent annual growth since founding",
+  // },
 ];
 
-const AchieveSession = ({ title }: { title: string }) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const AchieveSession = ({ title }: { title?: string }) => {
   return (
     <div>
       <Title order={4} mb={"md"}>
@@ -70,31 +71,91 @@ const AchieveSession = ({ title }: { title: string }) => {
   );
 };
 
+const ListItems = ({ title }: { title?: string }) => {
+  return (
+    <div>
+      <Title order={6} mb={"md"}>
+        {title}
+      </Title>
+      <div className="flex flex-col gap-y-2">
+        {DATA?.map((item, index) => {
+          return (
+            <div className="flex items-center" key={index}>
+              <IconPointFilled size={"15"} />
+              <Text ml={"xs"} fw={"normal"}>
+                {item.description}
+              </Text>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 export default function CompanyProfile({
   NextSegement,
 }: {
   NextSegement: (value: NextSegementValue) => void;
 }) {
-  const VisionMissions: { title: string; description: string }[] = [
+  const VisionMissions: {
+    title: string;
+    description: string;
+    type: "para" | "list";
+  }[] = [
     {
-      title: "Company History",
-      description:
-        "Founded in 2010, our company began as a small team with a big vision. Over the years, we've grown to become a leader in our industry, employing over 1,000 talented individuals across multiple locations worldwide.",
+      title: "",
+      description: "Africa Drone Kings: Bridging the Gap, One Sky at a Time",
+      type: "para",
     },
     {
-      title: "What We Do",
+      title: "",
       description:
-        "We specialize in developing innovative software solutions that help businesses streamline operations, increase efficiency, and drive growth. Our products serve clients across various industries, including finance, healthcare, retail, and manufacturing.",
+        "2018: We looked across the chasm, a vast divide separating Africa from the cutting-edge solutions of the 5th Industrial Revolution. Drones whizzed through first-world skies, while here, access, infrastructure, and even perspectives on technology held us back. Hunger gnawed at fields, public safety hung in the balance, and surveying remained an antiquated dance with theodolites.",
+      type: "para",
     },
     {
-      title: "Key Achievements",
+      title: "",
+      description:
+        "That's where we stepped in, not as tech vendors, but as problem-solvers. Africa Drone Kings wasn't born from a love of gadgets only, but a burning desire to bridge that gap. We didn't just offer drones; we built a bridge, brick by brick, from consultancy to procurement, training to after-sales support.",
+      type: "para",
+    },
+    {
+      title: "",
+      description:
+        "Our Founding CEO, a visionary leader - Vice Phiri saw the sky not as a limit, but a launchpad. Under his guidance, we've carved breakthroughs in drone technology that could revolutionize African landscapes.",
+      type: "para",
+    },
+    {
+      title: "Imagine a world where:",
       description: "",
+      type: "list",
     },
     {
-      title: "Global Presence",
+      title: "",
       description:
-        "With headquarters in San Francisco, we maintain offices in New York, London, Singapore, and Sydney, allowing us to serve clients around the globe.",
+        "Ancient landmarks whisper their secrets, revealed by the keen eyes of aerial surveys.",
+      type: "para",
     },
+    {
+      title: "",
+      description:
+        "We don't just fall in love with solutions; we fall head over heels for the problems themselves. We tinker, we adapt, we push boundaries until our drones become not just machines, but tools for transformation.",
+      type: "para",
+    },
+
+    {
+      title: "",
+      description:
+        "This isn't just about drones; it's about Africa's future taking flight. We're Africa Drone Kings, and we're here to paint the sky with possibilities, one drone, one breakthrough at a time",
+      type: "para",
+    },
+
+    // {
+    //   title: "Global Presence",
+    //   description:
+    //     "With headquarters in San Francisco, we maintain offices in New York, London, Singapore, and Sydney, allowing us to serve clients around the globe.",
+    // },
   ];
 
   // HOOKS
@@ -173,8 +234,8 @@ export default function CompanyProfile({
       <div className="flex flex-col gap-y-3.5">
         {VisionMissions?.map((item, index) => (
           <div key={index}>
-            {item.title == "Key Achievements" ? (
-              <AchieveSession title={item.title} />
+            {item.type == "list" ? (
+              <ListItems title={item.title} />
             ) : (
               <InfoSession description={item.description} title={item.title} />
             )}
