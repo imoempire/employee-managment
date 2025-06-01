@@ -62,7 +62,7 @@ const DATA = [
 const CoreSession = ({ title }: { title: string }) => {
   return (
     <div>
-      <Title order={4} mb={"md"}>
+      <Title order={4} mb={"md"} c={"#1e2939"}>
         {title}
       </Title>
       <div className="flex flex-col gap-y-2">
@@ -70,7 +70,7 @@ const CoreSession = ({ title }: { title: string }) => {
           return (
             <div className="flex items-center" key={index}>
               <IconPointFilled size={"15"} />
-              <Text ml={"xs"} fw={"bold"}>
+              <Text ml={"xs"} fw={"bold"} c={"#1e2939"}>
                 {item.title}
               </Text>
               :<Text> {item.description}</Text>
@@ -169,7 +169,7 @@ export default function VisionMission({
   return (
     <div>
       <div>
-        <Title order={3}>Vision & Mission</Title>
+        <Title order={3} c={"#1e2939"}>Vision & Mission</Title>
         <Text size="sm" c="#64748b" mb={"lg"}>
           Our company&apos;s purpose and future direction
         </Text>

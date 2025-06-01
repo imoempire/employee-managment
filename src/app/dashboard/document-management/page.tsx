@@ -132,10 +132,10 @@ export default function Page() {
               fullWidth
               data={segmentData}
               styles={{
-              root: {
-                overflow: "auto",
-              },
-            }}
+                root: {
+                  overflow: "auto",
+                },
+              }}
             />
           </div>
 
@@ -143,15 +143,12 @@ export default function Page() {
           {value === "overview" && (
             <Link href={`${pathname}/my_docs`}>
               <Button
-                // size={"lg"}
                 variant="filled"
                 radius="xl"
                 color="#054EFA"
                 leftSection={<IconMenuDeep />}
-                // className="w-full sm:w-auto"
               >
                 <span>My Documents</span>
-                {/* <span className="sm:hidden">Docs</span> */}
               </Button>
             </Link>
           )}

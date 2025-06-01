@@ -101,7 +101,7 @@ export default function Page() {
       {/* Main Content */}
       <div className="container mx-auto p-6">
         <div>
-          <Title order={1} >
+          <Title order={1} c={"#1e2939"}>
             Employee Onboarding
           </Title>
           <Text

@@ -120,7 +120,7 @@ export default function CodeConduct({
   return (
     <div>
       <div>
-        <Title order={3}>Code of Conduct</Title>
+        <Title order={3} c={"#1e2939"}>Code of Conduct</Title>
         <Text size="sm" c="#64748b" mb={"lg"}>
           Our company values and behavior guidelines
         </Text>
