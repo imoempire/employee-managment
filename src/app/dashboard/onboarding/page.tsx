@@ -9,11 +9,7 @@ import {
   Title,
 } from "@mantine/core";
 import React, { JSX, useState } from "react";
-import {
-  IconBook,
-  IconShield,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconBook, IconShield, IconUsers } from "@tabler/icons-react";
 import CodeConduct from "./_components/CodeConduct";
 import VisionMission from "./_components/VisionMission";
 import CompanyProfile from "./_components/Profile";
@@ -105,14 +101,13 @@ export default function Page() {
       {/* Main Content */}
       <div className="container mx-auto p-6">
         <div>
-          <Title order={1} className="text-2xl sm:text-3xl">
+          <Title order={1} >
             Employee Onboarding
           </Title>
           <Text
             size="lg"
             c="#64748b"
             mb={"lg"}
-            className="text-base sm:text-lg"
           >
             Learn about our company values, policies, and structure to help you
             get started.
@@ -122,15 +117,10 @@ export default function Page() {
         <Paper withBorder p={"md"} mb={"xl"} shadow="xs">
           <div className="flex flex-col gap-y-1.5">
             <div className="flex justify-between items-center">
-              <Text size="xl" fw={"500"} className="text-lg sm:text-xl">
+              <Text size="xl" fw={"500"}>
                 Onboarding
               </Text>
-              <Text
-                size="sm"
-                fw={"500"}
-                c={"#64748B"}
-                className="text-xs sm:text-sm"
-              >
+              <Text size="sm" fw={"500"} c={"#64748B"}>
                 {acceptedDocs?.length}/3 sections completed
               </Text>
             </div>
@@ -139,7 +129,7 @@ export default function Page() {
         </Paper>
 
         {/* Desktop: SegmentedControl */}
-        <Paper my={"xl"} className="hidden sm:block">
+        <div className="hidden sm:block">
           <SegmentedControl
             value={value}
             onChange={(val) => setValue(val as SegmentValues)}
@@ -154,7 +144,7 @@ export default function Page() {
               },
             }}
           />
-        </Paper>
+        </div>
 
         <div>
           <Paper shadow="xs" p={"md"} withBorder>

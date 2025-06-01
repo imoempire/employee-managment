@@ -7,7 +7,6 @@ import {
   Text,
   Divider,
   Button,
-  Paper,
   Center,
 } from "@mantine/core";
 import {
@@ -122,7 +121,7 @@ export default function Page() {
       <div className="container mx-auto p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {/* Responsive SegmentedControl - hidden on very small screens */}
-          <Paper my="xl" className="hidden xs:block w-full sm:w-auto">
+          <div className="hidden xs:block w-full sm:w-auto">
             <SegmentedControl
               value={value}
               onChange={(val) => setValue(val as SegmentValues)}
@@ -138,7 +137,7 @@ export default function Page() {
               },
             }}
             />
-          </Paper>
+          </div>
 
           {/* My Documents Button */}
           {value === "overview" && (
@@ -149,7 +148,7 @@ export default function Page() {
                 radius="xl"
                 color="#054EFA"
                 leftSection={<IconMenuDeep />}
-                className="w-full sm:w-auto"
+                // className="w-full sm:w-auto"
               >
                 <span>My Documents</span>
                 {/* <span className="sm:hidden">Docs</span> */}
@@ -168,7 +167,8 @@ export default function Page() {
                   padding="xl"
                   radius="40"
                   bg={"#0039C8"}
-                  className="text-white"
+
+                  // className="text-white"
                 >
                   <Stack>
                     <Group gap="xs">

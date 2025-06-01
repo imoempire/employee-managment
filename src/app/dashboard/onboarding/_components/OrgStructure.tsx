@@ -23,21 +23,24 @@ const InfoSession = ({
 const DATA = [
   {
     title: "Product Development",
-    description: "Responsible for designing, building, and maintaining our software products.",
+    description:
+      "Responsible for designing, building, and maintaining our software products.",
   },
   {
     title: "Customer Success",
-    description: "Ensures clients achieve their desired outcomes through our solutions.",
+    description:
+      "Ensures clients achieve their desired outcomes through our solutions.",
   },
   {
     title: "Sales & Marketing",
-    description: "Drives growth through market expansion and building client relationships.",
+    description:
+      "Drives growth through market expansion and building client relationships.",
   },
   {
     title: "Human Resources",
-    description: "Manages talent acquisition, employee development, and company culture.",
+    description:
+      "Manages talent acquisition, employee development, and company culture.",
   },
-  
 ];
 
 const DepartmentsCard = ({ title }: { title: string }) => {
@@ -49,13 +52,11 @@ const DepartmentsCard = ({ title }: { title: string }) => {
       <div className="grid grid-cols-2 gap-4">
         {DATA?.map((item, index) => {
           return (
-            <Paper shadow="0" withBorder p={"md"} className="flex items-center" key={index}>
+            <Paper shadow="0" withBorder p={"md"} key={index}>
               <Title order={4} mb={"sm"}>
                 {item?.title}
               </Title>
-              <Text fw={"normal"}>
-                {item.description}
-              </Text>
+              <Text fw={"normal"}>{item.description}</Text>
             </Paper>
           );
         })}

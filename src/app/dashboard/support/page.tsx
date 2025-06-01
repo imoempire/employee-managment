@@ -100,7 +100,7 @@ export default function page() {
 
         {/* Frequently Asked Questions */}
         <Paper shadow="sm" p="lg" radius="md" withBorder>
-          <Title order={2} className="text-2xl font-bold mb-2">
+          <Title order={2} fw={"700"} size={"xl"} mb={"sm"}>
             Frequently Asked Questions
           </Title>
           <Text fw={"500"} size="sm" c="#64748b" mb={"lg"}>
