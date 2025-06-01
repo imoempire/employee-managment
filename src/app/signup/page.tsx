@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "@mantine/form";
-import { InputField, PasswordField } from "@/Components/Inputs";
+import { InputField, PasswordField } from "@/components/Inputs";
 import { Button, Group, Text, Title } from "@mantine/core";
 import { IconMail, IconCheck } from "@tabler/icons-react";
 import { showNotification } from "@mantine/notifications";
