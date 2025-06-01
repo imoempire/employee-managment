@@ -11,6 +11,7 @@ import { API_ENDPOINT } from "@/service/api/endpoints";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
+
 export default function Page() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
