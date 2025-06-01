@@ -34,24 +34,28 @@ const VisionSession = ({
 
 const DATA = [
   {
-    title: "Innovation",
-    description: "We pursue creative solutions and embrace change.",
+    title: "PERFORMANCE",
+    description: "",
   },
   {
-    title: "Excellence",
-    description: "We strive for exceptional quality in everything we do.",
+    title: "ADAPTABILITY",
+    description: "",
   },
   {
-    title: "Integrity",
-    description: "We pursue creative solutions and embrace change.",
+    title: "CANDOUR",
+    description: "",
   },
   {
-    title: "Collaboration",
-    description: "We work together to achieve common goals.",
+    title: "TEAMWORK",
+    description: "",
   },
   {
-    title: "Customer Focus",
-    description: "We prioritize understanding and meeting customer needs.",
+    title: "GROWTH",
+    description: "",
+  },
+  {
+    title: "PASSION",
+    description: "",
   },
 ];
 
@@ -86,13 +90,11 @@ export default function VisionMission({
   const VisionMissions: { title: string; description: string }[] = [
     {
       title: "Our Vision",
-      description:
-        "To be the industry leader in innovative solutions that transform how businesses operate and succeed in the digital age.",
+      description: "Pioneering the 5th Industrial Revolution.",
     },
     {
       title: "Our Mission",
-      description:
-        "We deliver exceptional products and services that solve complex business challenges, while maintaining the highest standards of quality, integrity, and customer satisfaction.",
+      description: "To elevate the way we do life in Africa",
     },
     {
       title: "Core Values",
