@@ -2,11 +2,11 @@
 import { Box, Button, Group, Loader, Text, Title } from "@mantine/core";
 import { IconCheck, IconMail } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
-import { InputField, PasswordField } from "@/Components/Inputs";
 import { useRouter } from "next/navigation";
 import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { InputField, PasswordField } from "@/components/Inputs";
 
 export default function Home() {
   const router = useRouter();
