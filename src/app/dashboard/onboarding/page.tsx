@@ -13,7 +13,6 @@ import {
   IconBook,
   IconShield,
   IconUsers,
-  // IconBuilding,
 } from "@tabler/icons-react";
 import CodeConduct from "./_components/CodeConduct";
 import VisionMission from "./_components/VisionMission";
