@@ -23,6 +23,21 @@ export default function Home() {
         if (value.length === 0) {
           return "Password is required";
         }
+<<<<<<< HEAD
+=======
+        // if (value.length < 8) {
+        //   return `Password should be more than 8 characters ${value.length}`;
+        // }
+        // if (!/[a-z]/.test(value)) {
+        //   return "Password should contain at least one lowercase letter";
+        // }
+        // if (!/[A-Z]/.test(value)) {
+        //   return "Password should contain at least one uppercase letter";
+        // }
+        // if (!/\d/.test(value)) {
+        //   return "Password should contain at least one number";
+        // }
+>>>>>>> master
         return null;
       },
     },
@@ -56,7 +71,11 @@ export default function Home() {
         router.replace("/dashboard");
         router.refresh();
       }
+<<<<<<< HEAD
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+=======
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+>>>>>>> master
     } catch (error) {
       setError("An unexpected error occurred");
       // console.error(error);
@@ -82,7 +101,11 @@ export default function Home() {
 
   useEffect(() => {
     if (error) {
+<<<<<<< HEAD
       setTimeout(() => setError(""), 5000);
+=======
+      setTimeout(() => setError(''), 5000);
+>>>>>>> master
     }
   }, [error]);
 
@@ -131,7 +154,11 @@ export default function Home() {
           </Title>
 
           {!!error && (
+<<<<<<< HEAD
             <Text c="red" ta="center" mb={"md"}>
+=======
+            <Text c="red" ta="center" mb={'md'}>
+>>>>>>> master
               {error}
             </Text>
           )}
