@@ -42,7 +42,8 @@ export default function Page() {
       if (response?.message === "A new password has been sent to your email.") {
         showNotification({
           title: "Success",
-          message: response?.message || "A new password has been sent to your email.",
+          message:
+            response?.message || "A new password has been sent to your email.",
           color: "green",
           icon: <IconCheck />,
           position: "bottom-right",
@@ -78,16 +79,14 @@ export default function Page() {
             <Stack gap={0} justify="center">
               <Title
                 order={2}
-                className="text-center text-2xl sm:text-3xl font-bold text-gray-800"
+                ta={"center"}
+                c={"#1e2939"}
+                fw={"700"}
+                size={"xl"}
               >
                 New Password Sent
               </Title>
-              <Text
-                size="sm"
-                ta="center"
-                c={"dimmed"}
-                className="text-gray-600"
-              >
+              <Text size="sm" ta="center" c={"dimmed"}>
                 We have sent you instructions{" "}
                 {form.values.email && `to ${form.values.email}`}
               </Text>
@@ -107,18 +106,10 @@ export default function Page() {
           <div className="w-full max-w-md space-y-6">
             {/* Title */}
             <Group gap={0} justify="center">
-              <Title
-                order={2}
-                className="text-center text-2xl sm:text-3xl font-bold text-gray-800"
-              >
+              <Title order={2} c={"#1e2939"} fw={"700"} size={"xl"}>
                 Forgot Password?
               </Title>
-              <Text
-                size="sm"
-                ta="center"
-                c={"dimmed"}
-                className="text-gray-600"
-              >
+              <Text size="sm" ta="center" c={"dimmed"}>
                 No worries, will send your reset instructions.
               </Text>
             </Group>
@@ -152,18 +143,15 @@ export default function Page() {
               </Button>
 
               {/* Links */}
-              <Group
-                gap={0}
-                align="center"
-                justify="center"
-                className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 space-x-0"
+              <div
+                className="flex flex-col gap-1.5 sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 space-x-0 justify-center items-center"
                 onClick={() => router.replace("/")}
               >
                 <IconArrowNarrowLeft />
-                <Text size="sm" className="text-gray-600">
+                <Text size="sm" c={"#4a5565"}>
                   Back To Login{" "}
                 </Text>
-              </Group>
+              </div>
             </form>
           </div>
         )}

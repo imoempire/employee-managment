@@ -148,7 +148,7 @@ export default function DashboardPage() {
       {/* Main Content */}
       <div className="container mx-auto p-6">
         {data?.user?.username && (
-          <Title mb={"xl"} order={2} className="text-center text-gray-800">
+          <Title mb={"xl"} c={"#1e2939"} order={2} ta="center">
             Hey {data?.user?.username}!
           </Title>
         )}
@@ -163,7 +163,7 @@ export default function DashboardPage() {
                 padding="xl"
                 radius="40"
                 bg={card.color}
-                className="text-white"
+                color="white"
               >
                 <Stack>
                   <Group gap="xs">
@@ -201,10 +201,10 @@ export default function DashboardPage() {
                 }
                 sections={[{ value: item?.percentage, color: item?.color }]}
               />
-              <Text size="xl" fw={700} mt="md" className="text-gray-800">
+              <Text size="xl" fw={700} mt="md" c={"#4a5565"}>
                 {item?.percentage}%
               </Text>
-              <Text size="sm" className="text-gray-600">
+              <Text size="sm" c={"#4a5565"}>
                 {item?.title}
               </Text>
               {item?.showButton && (

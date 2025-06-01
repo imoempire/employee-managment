@@ -11,7 +11,6 @@ import { API_ENDPOINT } from "@/service/api/endpoints";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-
 export default function Page() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -257,13 +256,13 @@ export default function Page() {
               justify="center"
               className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
             >
-              <Text size="sm" className="text-gray-600">
+              <Text size="sm" c={"#4a5565"}>
                 You already have an account?{" "}
                 <a href={"/"} className="text-blue-600 hover:underline">
                   Login
                 </a>
               </Text>
-              <Text size="sm" className="text-gray-600">
+              <Text size="sm" c={"#4a5565"}>
                 Forgot your password?{" "}
                 <a
                   href="/forgot-password"
@@ -291,11 +290,7 @@ export default function Page() {
         ) : (
           <div className="w-full max-w-md space-y-6">
             {/* Title */}
-            <Title
-              order={2}
-              mb={"xl"}
-              className="text-center text-2xl sm:text-3xl font-bold text-gray-800"
-            >
+            <Title order={2} mb={"xl"} c={"#1e2939"} fw={"700"} size={"xl"}>
               Verify your Account
             </Title>
 
@@ -305,7 +300,7 @@ export default function Page() {
               </Text>
             )}
 
-            <Text size="sm" ta="center" className="text-gray-600">
+            <Text size="sm" ta="center" c={"#4a5565"}>
               A verification code has been sent to{" "}
               <strong>{form.values.email}</strong>
             </Text>

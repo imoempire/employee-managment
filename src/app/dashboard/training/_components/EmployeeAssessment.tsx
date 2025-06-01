@@ -64,10 +64,10 @@ export default function EmployeeAssessment() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <Stack align="center" mb={24}>
-          <Text size="xl" fw={700} className="text-3xl">
+          <Text size="xl" fw={700}>
             Employee Knowledge Assessment
           </Text>
-          <Text c="dimmed" className="text-gray-600">
+          <Text c="#4a5565">
             Complete all {totalQuestions} questions and submit to see your score
           </Text>
         </Stack>
@@ -78,22 +78,23 @@ export default function EmployeeAssessment() {
           radius="xl"
           size="sm"
           color="#e0e0e0"
-          className="bg-gray-200 mb-6"
+          bg={"#e5e7eb"}
+          mb={"xl"}
         />
 
         {/* Question Counter */}
         <div className="flex justify-between mb-4">
-          <Text className="text-gray-800 font-medium">
+          <Text fw={700} c={"#4a5565"}>
             Question {currentQuestion + 1} of {totalQuestions}
           </Text>
-          <Text className="text-gray-800 font-medium">
+          <Text fw={700} c={"#4a5565"}>
             Answered: {answeredCount} / {totalQuestions}
           </Text>
         </div>
 
         {/* Question Card */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm mb-6">
-          <Text fw={600} size="lg" mb={24} className="text-xl">
+          <Text fw={600} size="lg" mb={24} c={"#4a5565"}>
             Question {currentQuestion + 1}:{" "}
             {quizQuestions[currentQuestion].question}
           </Text>
@@ -128,7 +129,9 @@ export default function EmployeeAssessment() {
             color="gray"
             onClick={handlePrevious}
             disabled={currentQuestion === 0}
-            className="px-4 py-2 border border-gray-300 rounded-md"
+            radius="sm"
+            px={"md"}
+            py={"sm"}
           >
             Previous
           </Button>
@@ -138,7 +141,10 @@ export default function EmployeeAssessment() {
             variant="filled"
             color="dark"
             onClick={handleNext}
-            className="px-4 py-2 bg-gray-900 text-white rounded-md"
+            bg={"#101828"}
+            radius="sm"
+            px={"xl"}
+            py={"sm"}
           >
             Next
           </Button>

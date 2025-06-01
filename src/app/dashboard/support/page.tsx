@@ -22,8 +22,8 @@ export default function page() {
         {/* Top Section: Contact Options and Submit Inquiry */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Contact Options */}
-          <Paper shadow="sm" p="lg" radius="md" withBorder className="h-full">
-            <Title order={2} className="text-2xl font-bold mb-2">
+          <Paper shadow="sm" p="lg" radius="md" withBorder h={"100%"}>
+            <Title order={2} c={"#1e2939"} fw={"700"} size={"xl"}>
               Contact Options
             </Title>
             <Text size="sm" c="#64748b" mb={"lg"}>
@@ -33,7 +33,7 @@ export default function page() {
               <div className="flex items-center">
                 <IconMessage className="text-blue-500 mr-3" size={24} />
                 <div>
-                  <Text size="sm" className="font-semibold">
+                  <Text size="sm" fw={"600"}>
                     Live Chat
                   </Text>
                   <Text size="xs" c="#64748b">
@@ -44,7 +44,7 @@ export default function page() {
               <div className="flex items-center">
                 <IconPhone className="text-blue-500 mr-3" size={24} />
                 <div>
-                  <Text size="sm" className="font-semibold">
+                  <Text size="sm" fw={"600"}>
                     Support Hotline
                   </Text>
                   <Text size="xs" c="#64748b">
@@ -55,7 +55,7 @@ export default function page() {
               <div className="flex items-center">
                 <IconMail className="text-blue-500 mr-3" size={24} />
                 <div>
-                  <Text size="sm" className="font-semibold">
+                  <Text size="sm" fw={"600"}>
                     Email Support
                   </Text>
                   <Text size="xs" c="#64748b">
@@ -66,7 +66,7 @@ export default function page() {
               <div className="flex items-center">
                 <IconHelpCircle className="text-blue-500 mr-3" size={24} />
                 <div>
-                  <Text size="sm" className="font-semibold">
+                  <Text size="sm" fw={"600"}>
                     Help Center
                   </Text>
                   <Text size="xs" c="#64748b">
@@ -78,8 +78,8 @@ export default function page() {
           </Paper>
 
           {/* Submit an Inquiry */}
-          <Paper shadow="sm" p="lg" radius="md" withBorder className="h-full">
-            <Title order={2} className="text-2xl font-bold mb-2">
+          <Paper shadow="sm" p="lg" radius="md" withBorder h={"100%"}>
+            <Title order={2} c={"#1e2939"} fw={"700"} size={"xl"}>
               Submit an Inquiry
             </Title>
             <Text size="sm" c="#64748b" mb={"lg"}>
@@ -90,7 +90,7 @@ export default function page() {
               label={"Your question or concern"}
               placeholder="Describe what you need help with..."
               minRows={4}
-              className="mb-4"
+              mb={"md"}
             />
             <Button fullWidth color="dark">
               Submit Request
@@ -103,12 +103,12 @@ export default function page() {
           <Title order={2} className="text-2xl font-bold mb-2">
             Frequently Asked Questions
           </Title>
-          <Text fw={'500'} size="sm" c="#64748b" mb={'lg'}>
+          <Text fw={"500"} size="sm" c="#64748b" mb={"lg"}>
             Quick answers to common questions
           </Text>
           <div className="space-y-4">
             <div>
-              <Text size="sm" className="font-semibold">
+              <Text size="sm" fw={"600"}>
                 How do I reset my password?
               </Text>
               <Text size="sm" c="#64748b">
@@ -117,7 +117,7 @@ export default function page() {
               </Text>
             </div>
             <div>
-              <Text size="sm" className="font-semibold">
+              <Text size="sm" fw={"600"}>
                 Where can I find my training progress?
               </Text>
               <Text size="sm" c="#64748b">
@@ -126,7 +126,7 @@ export default function page() {
               </Text>
             </div>
             <div>
-              <Text size="sm" className="font-semibold">
+              <Text size="sm" fw={"600"}>
                 How do I update my contact information?
               </Text>
               <Text size="sm" c="#64748b">
@@ -135,7 +135,7 @@ export default function page() {
               </Text>
             </div>
             <div>
-              <Text size="sm" className="font-semibold">
+              <Text size="sm" fw={"600"}>
                 When are new training videos added?
               </Text>
               <Text size="sm" c="#64748b">

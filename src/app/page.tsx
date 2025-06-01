@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Group, Loader, Text, Title } from "@mantine/core";
+import { Box, Button, Loader, Text, Title } from "@mantine/core";
 import { IconCheck, IconMail } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
@@ -23,18 +23,6 @@ export default function Home() {
         if (value.length === 0) {
           return "Password is required";
         }
-        // if (value.length < 8) {
-        //   return `Password should be more than 8 characters ${value.length}`;
-        // }
-        // if (!/[a-z]/.test(value)) {
-        //   return "Password should contain at least one lowercase letter";
-        // }
-        // if (!/[A-Z]/.test(value)) {
-        //   return "Password should contain at least one uppercase letter";
-        // }
-        // if (!/\d/.test(value)) {
-        //   return "Password should contain at least one number";
-        // }
         return null;
       },
     },
@@ -68,7 +56,7 @@ export default function Home() {
         router.replace("/dashboard");
         router.refresh();
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("An unexpected error occurred");
       // console.error(error);
@@ -143,7 +131,7 @@ export default function Home() {
           </Title>
 
           {!!error && (
-            <Text c="red" ta="center" mb={'md'}>
+            <Text c="red" ta="center" mb={"md"}>
               {error}
             </Text>
           )}
@@ -188,18 +176,14 @@ export default function Home() {
           </form>
 
           {/* Links */}
-          <Group
-            align="center"
-            justify="center"
-            className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 "
-          >
-            <Text size="sm" className="text-gray-600">
+          <div className="flex flex-col gap-1.5 space-y-2 lg:space-y-0 lg:space-x-4 justify-center  items-center">
+            <Text size="sm" c={"#4a5565"}>
               Don’t have an account yet?{" "}
               <a href="/signup" className="text-blue-600 hover:underline">
                 Signup
               </a>
             </Text>
-            <Text size="sm" className="text-gray-600">
+            <Text size="sm" c={"#4a5565"}>
               Forgot your password?{" "}
               <a
                 href="/forgot-password"
@@ -208,7 +192,7 @@ export default function Home() {
                 Click here
               </a>
             </Text>
-          </Group>
+          </div>
 
           {/* Gmail Button */}
           <Button
