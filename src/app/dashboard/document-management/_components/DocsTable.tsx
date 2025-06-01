@@ -16,7 +16,7 @@ import {
   IconDotsVertical,
 } from "@tabler/icons-react";
 import { EmployeeDocDataTable } from "./Types";
-import { DeleteModal } from "@/components/DeleteModal";
+import { DeleteModal } from "@/Components/DeleteModal";
 import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useCustomDelete } from "@/Hooks/useCustomDelete";

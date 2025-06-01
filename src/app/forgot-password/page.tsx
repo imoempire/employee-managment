@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import { useForm } from "@mantine/form";
-import { InputField } from "@/components/Inputs";
+import { InputField } from "@/Components/Inputs";
 import { Button, Group, Stack, Text, Title } from "@mantine/core";
 import {
   IconArrowNarrowLeft,

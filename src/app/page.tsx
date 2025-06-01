@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { showNotification } from "@mantine/notifications";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { InputField, PasswordField } from "@/components/Inputs";
+import { InputField, PasswordField } from "@/Components/Inputs";
 
 export default function Home() {
   const router = useRouter();
