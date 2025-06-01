@@ -26,7 +26,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Employee Onboarding System",
+  title: "EmployeeHub | Management",
   description: "",
 };
 
